@@ -41,8 +41,8 @@ class _BoardsListScreen extends StatelessWidget {
                 children: [
                   if (vm.isLoading) const LinearProgressIndicator(minHeight: 2),
                   const _Header(),
-                  const SizedBox(height: 12),
-                  const _MyAllSegmented(),
+                  //   const SizedBox(height: 12),
+                  // const _MyAllSegmented(),
                   const SizedBox(height: 16),
                   Expanded(
                     child: RefreshIndicator(
@@ -107,8 +107,7 @@ class _Header extends StatelessWidget {
           ),
           SizedBox(height: 6),
           Text(
-            'Просматривайте, показывайте и делитесь теплыми моментами. '
-            'Настройки можно изменить в любой момент.',
+            'Просматривайте, показывайте и делитесь теплыми моментами. ',
             style: TextStyle(fontSize: 14, color: Colors.black54, height: 1.3),
           ),
         ],

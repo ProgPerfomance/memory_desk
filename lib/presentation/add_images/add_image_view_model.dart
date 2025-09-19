@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:memory_desk/core/api_routes.dart';
 import 'package:memory_desk/data/repository/desk_repository.dart';
 import 'package:memory_desk/service_locator.dart';
 
@@ -59,7 +60,7 @@ class UploadPhotosViewModel extends ChangeNotifier {
       try {
         final b64 = base64Encode(p.bytes);
         final resp = await http.post(
-          Uri.parse('http://localhost:3322/photos/add'),
+          Uri.parse('$baseUrl/photos/add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'imageType': p.imageType, // ожидается на бэке
