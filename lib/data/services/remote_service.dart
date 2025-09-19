@@ -13,4 +13,9 @@ class RemoteService {
     final response = await dio.get("/desk/user/$userId");
     return response;
   }
+
+  static Future<Response> uploadDeskImages(Map data) async {
+    final response = await dio.post("/desk/images/add", data: data);
+    return response;
+  }
 }

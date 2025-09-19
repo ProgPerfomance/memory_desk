@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:memory_desk/presentation/add_images/add_images_view.dart';
 
 import '../open_image/open_image_view.dart';
 
@@ -50,7 +51,12 @@ class GalleryView extends StatelessWidget {
                   ActionButton(
                     icon: Icons.add,
                     onTap: () {
-                      // TODO: добавить фотку
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UploadPhotosView(),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 14),

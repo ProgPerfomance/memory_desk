@@ -1,5 +1,6 @@
 import 'package:memory_desk/data/services/remote_service.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
+import 'package:memory_desk/presentation/add_images/add_image_view_model.dart';
 
 class DeskRepository {
   Future<void> createDesk(DeskEntity desk) async {
@@ -11,5 +12,23 @@ class DeskRepository {
     List data = response.data;
 
     return data.map((v) => DeskEntity.fromApi(v)).toList();
+  }
+
+  Future<void> uploadImagesToDesk(
+    List<UploadPhoto> images,
+    String deskId,
+  ) async {
+    final response = await RemoteService.uploadDeskImages({
+      "images":
+          images
+              .map(
+                (v) => {
+                  "imageUrl": v.uploadedUrl ?? "",
+                  "caption": v.caption,
+                  "deskId": deskId,
+                },
+              )
+              .toList(),
+    });
   }
 }
