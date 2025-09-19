@@ -16,6 +16,13 @@ class CreateDeskViewModel extends ChangeNotifier {
     "https://i.pinimg.com/736x/55/06/2c/55062c56e781b2a84c89c07e95292a07.jpg",
   ];
 
+  PrivacyTypes privacyType = PrivacyTypes.private;
+
+  void selectPrivacyType(PrivacyTypes type) {
+    privacyType = type;
+    notifyListeners();
+  }
+
   final _picker = ImagePicker();
 
   File? userImage; // если выбрано своё фото
@@ -58,6 +65,7 @@ class CreateDeskViewModel extends ChangeNotifier {
   Future<void> createDesk(String name, String description) async {
     await _deskRepository.createDesk(
       DeskEntity(
+        privacy: privacyType.name,
         id: null,
         name: name,
         userId: "333",
@@ -67,3 +75,5 @@ class CreateDeskViewModel extends ChangeNotifier {
     );
   }
 }
+
+enum PrivacyTypes { private, link, public }

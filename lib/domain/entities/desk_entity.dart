@@ -4,6 +4,7 @@ class DeskEntity {
   final String description;
   final String backgroundUrl;
   final String userId;
+  final String privacy;
 
   DeskEntity({
     required this.id,
@@ -11,6 +12,7 @@ class DeskEntity {
     required this.userId,
     required this.description,
     required this.backgroundUrl,
+    required this.privacy,
   });
 
   factory DeskEntity.fromApi(Map map) {
@@ -20,6 +22,7 @@ class DeskEntity {
       userId: map['userId'],
       description: map['description'],
       backgroundUrl: map['backgroundUrl'],
+      privacy: map['privacy'],
     );
   }
 
@@ -29,6 +32,7 @@ class DeskEntity {
       'description': description,
       "backgroundUrl": backgroundUrl,
       "userId": userId,
+      "privacy": privacy,
     };
   }
 }

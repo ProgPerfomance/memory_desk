@@ -8,4 +8,9 @@ class RemoteService {
     final response = await dio.post("/desk/create", data: data);
     return response;
   }
+
+  static Future<Response> getUserDesks(String userId) async {
+    final response = await dio.get("/desk/user/$userId");
+    return response;
+  }
 }
