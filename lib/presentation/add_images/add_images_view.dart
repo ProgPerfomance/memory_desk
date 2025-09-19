@@ -55,15 +55,7 @@ class UploadPhotosView extends StatelessWidget {
                                   .read<UploadPhotosViewModel>()
                                   .uploadedPayload;
                           if (payload.isNotEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Загружено: ${payload.length} фото',
-                                ),
-                              ),
-                            );
-                            // Здесь на следующем шаге дергаем репозиторий создания/обновления доски
-                            // с payload [{imageUrl, caption}, ...]
+                            Navigator.pop(context);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

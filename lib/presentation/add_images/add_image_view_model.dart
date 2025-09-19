@@ -97,7 +97,8 @@ class UploadPhotosViewModel extends ChangeNotifier {
     }
 
     isUploading = false;
-    _deskRepository.uploadImagesToDesk(photos, deskId);
+    await _deskRepository.uploadImagesToDesk(photos, deskId);
+    //photos = [];
     notifyListeners();
   }
 
@@ -112,7 +113,11 @@ class UploadPhotosViewModel extends ChangeNotifier {
 
   Future<void> pickImages() async {
     try {
-      final pickedFiles = await _picker.pickMultiImage(imageQuality: 85);
+      final pickedFiles = await _picker.pickMultiImage(
+        imageQuality: 85,
+        maxWidth: 550,
+        maxHeight: 700,
+      );
       if (pickedFiles.isNotEmpty) {
         final futures = pickedFiles.map((f) async {
           final bytes = await f.readAsBytes();

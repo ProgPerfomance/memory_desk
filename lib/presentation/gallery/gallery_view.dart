@@ -1,89 +1,178 @@
+// gallery_view.dart
 import 'dart:math';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:memory_desk/presentation/add_images/add_images_view.dart';
+import 'package:memory_desk/domain/entities/desk_entity.dart';
+import 'package:provider/provider.dart';
 
-import '../open_image/open_image_view.dart';
+import 'gallery_view_model.dart';
+import '../add_images/add_images_view.dart';
+import '../open_image/open_image_view.dart'; // твой просмотрщик
 
 class GalleryView extends StatelessWidget {
   final String deskId;
-  const GalleryView({super.key, required this.deskId});
+  final DeskEntity desk;
+  const GalleryView({super.key, required this.deskId, required this.desk});
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => GalleryViewModel()..load(deskId),
+      child: _GalleryScreen(deskId: deskId, desk: desk),
+    );
+  }
+}
+
+class _GalleryScreen extends StatelessWidget {
+  final String deskId;
+  final DeskEntity desk;
+  const _GalleryScreen({required this.deskId, required this.desk});
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<GalleryViewModel>();
+
     return Scaffold(
-      appBar: AppBar(),
       body: SafeArea(
-        child: Stack(
-          children: [
-            /// Сетка фоток
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: StaggeredGrid.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 18,
-                  children: List.generate(images.length, (index) {
-                    final v = images[index];
-                    return StaggeredGridTile.fit(
-                      crossAxisCellCount: 1,
-                      child: PhotoCard(
-                        imageUrl: v,
-                        caption: "Пример подписи",
-                        index: index,
+        top: false,
+        bottom: false,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(desk.backgroundUrl),
+              fit: BoxFit.cover,
+            ),
+          ),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            children: [
+              if (vm.isLoading && vm.deskPhotos.isEmpty)
+                const Center(child: CircularProgressIndicator()),
+
+              if (!vm.isLoading && vm.error != null)
+                ListView(
+                  // чтобы тянулось для refresh
+                  children: [
+                    const SizedBox(height: 120),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Text(
+                          'Ошибка загрузки: ${vm.error}',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.black54),
+                        ),
                       ),
+                    ),
+                  ],
+                ),
+
+              if (!vm.isLoading && vm.error == null && vm.deskPhotos.isEmpty)
+                ListView(
+                  children: const [
+                    SizedBox(height: 120),
+                    Center(
+                      child: Text(
+                        'Пока нет фотографий',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ],
+                ),
+
+              if (vm.deskPhotos.isNotEmpty)
+                MasonryGridView.count(
+                  padding: const EdgeInsets.only(
+                    left: 14,
+                    right: 14,
+                    top: 100,
+                    bottom: 20,
+                  ),
+                  physics:
+                      const BouncingScrollPhysics(), // либо ClampingScrollPhysics()
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 18,
+                  crossAxisSpacing: 8,
+                  itemCount: vm.deskPhotos.length,
+                  itemBuilder: (context, index) {
+                    final img = vm.deskPhotos[index];
+                    return PhotoCard(
+                      imageUrl: img.imageUrl,
+                      caption: img.caption,
+                      index: index,
+                      allUrls: vm.deskPhotos.map((e) => e.imageUrl).toList(),
                     );
-                  }),
+                  },
+                ),
+
+              /// Кнопки справа внизу
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ActionButton(
+                      icon: Icons.add,
+                      onTap: () async {
+                        // Переходим на экран добавления и ждём результат,
+                        // затем перезагружаем галерею
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => UploadPhotosView(deskId: deskId),
+                          ),
+                        );
+                        await context.read<GalleryViewModel>().refresh(deskId);
+                      },
+                    ),
+                    const SizedBox(height: 14),
+                    ActionButton(
+                      icon: Icons.edit,
+                      onTap: () {
+                        // TODO: редактировать доску
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ),
-
-            /// Кнопки справа внизу
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ActionButton(
-                    icon: Icons.add,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => UploadPhotosView(deskId: deskId),
-                        ),
-                      );
-                    },
+              Positioned(
+                top: 80,
+                left: 8,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 48,
+                    width: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(188),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Icon(
+                      CupertinoIcons.back,
+                      color: Colors.black,
+                      size: 30,
+                    ),
                   ),
-                  const SizedBox(height: 14),
-                  ActionButton(
-                    icon: Icons.edit,
-                    onTap: () {
-                      // TODO: редактировать доску
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-/// Кастомная круглая кнопка
 class ActionButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const ActionButton({required this.icon, required this.onTap});
+  const ActionButton({required this.icon, required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -109,25 +198,26 @@ class PhotoCard extends StatelessWidget {
   final String imageUrl;
   final String? caption;
   final int index;
+  final List<String> allUrls;
 
   const PhotoCard({
     super.key,
     required this.imageUrl,
-    this.caption,
     required this.index,
+    required this.allUrls,
+    this.caption,
   });
 
   @override
   Widget build(BuildContext context) {
     return Transform.rotate(
-      angle: randomAngle(),
+      angle: _randomAngle(),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (context) => PhotoViewer(photos: images, initialIndex: index),
+              builder: (_) => PhotoViewer(photos: allUrls, initialIndex: index),
             ),
           );
         },
@@ -150,10 +240,7 @@ class PhotoCard extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                // 👉 ключевой момент — Image сам тянет высоту по ratio
                 Image.network(imageUrl, fit: BoxFit.cover),
-
-                // Подпись
                 if (caption != null && caption!.isNotEmpty)
                   Positioned(
                     left: 0,
@@ -189,8 +276,6 @@ class PhotoCard extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                // Иконка в углу
                 Positioned(
                   top: -8,
                   right: -8,
@@ -212,20 +297,8 @@ class PhotoCard extends StatelessWidget {
   }
 }
 
-List<String> images = [
-  "https://i.pinimg.com/236x/c8/cc/24/c8cc24bba37a25c009647b8875aae0e3.jpg",
-  "https://cs14.pikabu.ru/post_img/big/2023/04/20/3/1681956381171584576.jpg",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxlFCXTU1vPdkR0G7B_Ur8VRWUSg73w8cT9A&s",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-RD5GYGuVntEQ_QS8sMrjb7OVxJRWRAqkZw&s",
-];
-
-// class ImageCardDTO {
-//   final String imageUrl;
-//   final String? title;
-// }
-
-double randomAngle() {
+double _randomAngle() {
   final random = Random();
-  final degrees = -8 + random.nextInt(17); // от -8 до 8 включительно
-  return degrees * pi / 180; // переводим в радианы
+  final degrees = -8 + random.nextInt(17);
+  return degrees * pi / 180;
 }

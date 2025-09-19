@@ -206,7 +206,9 @@ class _BoardCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GalleryView(deskId: board.id ?? ""),
+                builder:
+                    (context) =>
+                        GalleryView(deskId: board.id ?? "", desk: board),
               ),
             );
           },
