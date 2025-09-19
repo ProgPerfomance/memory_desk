@@ -1,41 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
+import 'package:memory_desk/presentation/gallery/gallery_view.dart';
+import 'package:provider/provider.dart';
+import 'desk_list_view_model.dart';
 
-/// Пред-MVP: чистый дизайн без логики и бэка.
-/// Страница списка досок в светлой теме, full-width list view, 200px высота карточки.
 class BoardsListView extends StatelessWidget {
   const BoardsListView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final boards = List.generate(
-      6,
-      (i) => Board(
-        name: "Пума кот",
-        description:
-            "Пума реально кот. Красивые моменты и тёплые воспоминания. Здесь может быть длинное описание, показываем до 2 строк.",
-        backgroundUrl:
-            "https://cdn1.ozonusercontent.com/s3/club-storage/images/article_image_752x940/1016/c500/01ba2fbd-cb08-402e-be06-59e5dd4b0608.jpeg",
-        privacy: i % 3 == 0 ? "private" : (i % 3 == 1 ? "link" : "public"),
-        photoCount: 42 + i,
-      ),
+    return ChangeNotifierProvider(
+      create: (_) => DeskListViewModel()..loadMyDesks(),
+      child: const _BoardsListScreen(),
     );
+  }
+}
+
+class _BoardsListScreen extends StatelessWidget {
+  const _BoardsListScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<DeskListViewModel>();
+
+    final boards = List.generate(vm.desks.length, (i) {
+      final item = vm.desks[i];
+      return Board(
+        name: item.name,
+        description: item.description,
+        backgroundUrl: item.backgroundUrl,
+        privacy: item.privacy,
+        photoCount: 42 + i,
+      );
+    });
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAF5ED),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            const _Header(),
-            const SizedBox(height: 12),
-            const _MyAllSegmented(), // визуальный переключатель Мои/Все (без логики)
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                itemCount: boards.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 16),
-                itemBuilder:
-                    (context, index) => _BoardCard(board: boards[index]),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                children: [
+                  if (vm.isLoading) const LinearProgressIndicator(minHeight: 2),
+                  const _Header(),
+                  const SizedBox(height: 12),
+                  const _MyAllSegmented(),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: RefreshIndicator(
+                      color: Colors.black,
+                      onRefresh: () async {
+                        // при свайпе вниз обновляем список досок
+                        await context.read<DeskListViewModel>().loadMyDesks();
+                      },
+                      child: ListView.separated(
+                        physics:
+                            const AlwaysScrollableScrollPhysics(), // важно для RefreshIndicator
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                        itemCount: boards.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 16),
+                        itemBuilder:
+                            (context, index) =>
+                                _BoardCard(board: boards[index]),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ActionButton(
+                    icon: Icons.add,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Step1View()),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ],
@@ -156,7 +207,12 @@ class _BoardCard extends StatelessWidget {
         color: Colors.white,
         elevation: 0,
         child: InkWell(
-          onTap: () {}, // чисто UI
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => GalleryView()),
+            );
+          },
           child: Container(
             height: 200,
             decoration: BoxDecoration(

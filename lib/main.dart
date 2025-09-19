@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memory_desk/presentation/create_desk/create_desk_view_model.dart';
-import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
+import 'package:memory_desk/presentation/desk_list/desk_list_view_model.dart';
+import 'package:memory_desk/presentation/gallery/gallery_view_model.dart';
 import 'package:memory_desk/service_locator.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CreateDeskViewModel()),
+        ChangeNotifierProvider(create: (context) => DeskListViewModel()),
+        ChangeNotifierProvider(create: (context) => GalleryViewModel()),
       ],
       child: MaterialApp(
         home: BoardsListView(),

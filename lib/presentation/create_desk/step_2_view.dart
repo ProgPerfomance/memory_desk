@@ -91,8 +91,10 @@ class Step2PrivacyView extends StatelessWidget {
                     elevation: 6,
                     child: InkWell(
                       customBorder: const CircleBorder(),
-                      onTap: () {
-                        vm.createDesk(name, description);
+                      onTap: () async {
+                        await vm.createDesk(name, description);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(18.0),

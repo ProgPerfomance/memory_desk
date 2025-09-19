@@ -177,35 +177,52 @@ class Step1View extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: Material(
-                            shape: const CircleBorder(),
-                            color: Colors.white,
-                            elevation: 6,
-                            child: InkWell(
-                              customBorder: const CircleBorder(),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (_) => Step2PrivacyView(
-                                          name: _nameController.text,
-                                          description:
-                                              _descriptionController.text,
-                                        ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text(
+                                  'Назад',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
                                   ),
-                                );
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(18.0),
-                                child: Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.black,
-                                  size: 28,
                                 ),
                               ),
-                            ),
+                              const Spacer(),
+                              Material(
+                                shape: const CircleBorder(),
+                                color: Colors.white,
+                                elevation: 6,
+                                child: InkWell(
+                                  customBorder: const CircleBorder(),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (_) => Step2PrivacyView(
+                                              name: _nameController.text,
+                                              description:
+                                                  _descriptionController.text,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(18.0),
+                                    child: Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.black,
+                                      size: 28,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

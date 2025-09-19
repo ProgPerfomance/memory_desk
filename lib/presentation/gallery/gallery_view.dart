@@ -11,6 +11,7 @@ class GalleryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Stack(
           children: [
@@ -46,14 +47,14 @@ class GalleryView extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _ActionButton(
+                  ActionButton(
                     icon: Icons.add,
                     onTap: () {
                       // TODO: добавить фотку
                     },
                   ),
                   const SizedBox(height: 14),
-                  _ActionButton(
+                  ActionButton(
                     icon: Icons.edit,
                     onTap: () {
                       // TODO: редактировать доску
@@ -70,11 +71,11 @@ class GalleryView extends StatelessWidget {
 }
 
 /// Кастомная круглая кнопка
-class _ActionButton extends StatelessWidget {
+class ActionButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _ActionButton({required this.icon, required this.onTap});
+  const ActionButton({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
