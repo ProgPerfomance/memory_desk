@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view.dart';
 import 'package:provider/provider.dart';
@@ -25,13 +26,7 @@ class _BoardsListScreen extends StatelessWidget {
 
     final boards = List.generate(vm.desks.length, (i) {
       final item = vm.desks[i];
-      return Board(
-        name: item.name,
-        description: item.description,
-        backgroundUrl: item.backgroundUrl,
-        privacy: item.privacy,
-        photoCount: 42 + i,
-      );
+      return item;
     });
 
     return Scaffold(
@@ -196,7 +191,7 @@ class _SegmentButton extends StatelessWidget {
 }
 
 class _BoardCard extends StatelessWidget {
-  final Board board;
+  final DeskEntity board;
   const _BoardCard({required this.board});
 
   @override
@@ -210,7 +205,9 @@ class _BoardCard extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => GalleryView()),
+              MaterialPageRoute(
+                builder: (context) => GalleryView(deskId: board.id ?? ""),
+              ),
             );
           },
           child: Container(
@@ -267,7 +264,7 @@ class _BoardCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      _PhotoCounter(count: board.photoCount),
+                      _PhotoCounter(count: 0),
                     ],
                   ),
                 ),
@@ -431,22 +428,6 @@ class _RoundIcon extends StatelessWidget {
       ),
     );
   }
-}
-
-class Board {
-  final String name;
-  final String description;
-  final String backgroundUrl;
-  final String privacy;
-  final int photoCount;
-
-  Board({
-    required this.name,
-    required this.description,
-    required this.backgroundUrl,
-    required this.privacy,
-    required this.photoCount,
-  });
 }
 
 class _PrivacyStyle {

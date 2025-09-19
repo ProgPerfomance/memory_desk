@@ -8,7 +8,8 @@ import 'add_image_open_view.dart';
 import 'add_image_view_model.dart';
 
 class UploadPhotosView extends StatelessWidget {
-  const UploadPhotosView({super.key});
+  final String deskId;
+  const UploadPhotosView({super.key, required this.deskId});
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +47,9 @@ class UploadPhotosView extends StatelessWidget {
                     vm.isUploading
                         ? null
                         : () async {
-                          await context
-                              .read<UploadPhotosViewModel>()
-                              .uploadAll();
+                          await context.read<UploadPhotosViewModel>().uploadAll(
+                            deskId,
+                          );
                           final payload =
                               context
                                   .read<UploadPhotosViewModel>()

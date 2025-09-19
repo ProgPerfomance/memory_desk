@@ -7,7 +7,8 @@ import 'package:memory_desk/presentation/add_images/add_images_view.dart';
 import '../open_image/open_image_view.dart';
 
 class GalleryView extends StatelessWidget {
-  const GalleryView({super.key});
+  final String deskId;
+  const GalleryView({super.key, required this.deskId});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,8 @@ class GalleryView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => UploadPhotosView(),
+                          builder:
+                              (context) => UploadPhotosView(deskId: deskId),
                         ),
                       );
                     },

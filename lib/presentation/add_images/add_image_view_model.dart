@@ -37,7 +37,7 @@ class UploadPhotosViewModel extends ChangeNotifier {
 
   /// Пакетная загрузка всех фоток последовательно.
   /// После выполнения готовый payload доступен через [uploadedPayload].
-  Future<void> uploadAll() async {
+  Future<void> uploadAll(String deskId) async {
     if (isUploading || photos.isEmpty) return;
     isUploading = true;
     notifyListeners();
@@ -97,6 +97,7 @@ class UploadPhotosViewModel extends ChangeNotifier {
     }
 
     isUploading = false;
+    _deskRepository.uploadImagesToDesk(photos, deskId);
     notifyListeners();
   }
 
