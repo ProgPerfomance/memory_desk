@@ -2,11 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:memory_desk/data/repository/desk_repository.dart';
+import 'package:memory_desk/data/repository/user_repository.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/service_locator.dart';
 
 class CreateDeskViewModel extends ChangeNotifier {
   final DeskRepository _deskRepository = getIt.get<DeskRepository>();
+  final UserRepository _userRepository = getIt.get<UserRepository>();
 
   final List<String> backgrounds = [
     "https://cdn1.ozonusercontent.com/s3/club-storage/images/article_image_752x940/1016/c500/01ba2fbd-cb08-402e-be06-59e5dd4b0608.jpeg",
@@ -68,7 +70,7 @@ class CreateDeskViewModel extends ChangeNotifier {
         privacy: privacyType.name,
         id: null,
         name: name,
-        userId: "333",
+        userId: _userRepository.user.id,
         description: description,
         backgroundUrl: selectedImageUrl ?? "",
       ),

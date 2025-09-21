@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_desk/presentation/auth/auth_view_model.dart';
+import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
 import 'package:provider/provider.dart';
 
 class AuthView extends StatelessWidget {
@@ -79,7 +80,16 @@ class AuthView extends StatelessWidget {
                       textColor: Colors.black87,
                       borderColor: Colors.black12,
                       onTap: () async {
-                        await vm.loginUserWithGoogle();
+                        bool success = await vm.loginUserWithGoogle();
+                        if (success == true) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BoardsListView(),
+                            ),
+                            (v) => false,
+                          );
+                        }
                       },
                     ),
                   ),

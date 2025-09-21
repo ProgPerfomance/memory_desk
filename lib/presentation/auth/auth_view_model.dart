@@ -5,7 +5,7 @@ import 'package:memory_desk/service_locator.dart';
 class AuthViewModel extends ChangeNotifier {
   final UserRepository _userRepository = getIt.get<UserRepository>();
 
-  Future<void> loginUserWithGoogle() async {
-    _userRepository.loginUserByGoogle();
+  Future<bool> loginUserWithGoogle() async {
+    return await _userRepository.loginUserByGoogle();
   }
 }

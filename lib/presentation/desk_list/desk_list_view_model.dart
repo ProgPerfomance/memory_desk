@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:memory_desk/data/repository/desk_repository.dart';
+import 'package:memory_desk/data/repository/user_repository.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/service_locator.dart';
 
 class DeskListViewModel extends ChangeNotifier {
   final DeskRepository _deskRepository = getIt.get<DeskRepository>();
+  final UserRepository _userRepository = getIt.get<UserRepository>();
 
   /// Публичный массив досок
   List<DeskEntity> desks = [];
@@ -18,7 +20,7 @@ class DeskListViewModel extends ChangeNotifier {
       error = null;
       notifyListeners();
 
-      desks = await _deskRepository.getMyDesks("333");
+      desks = await _deskRepository.getMyDesks(_userRepository.user.id);
     } catch (e, st) {
       error = e.toString();
       if (kDebugMode) {
