@@ -4,10 +4,12 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Нужно, чтобы выбрать фон вашей доски.</string>
+    <key>REVERSED_CLIENT_ID</key>
+    <string>com.googleusercontent.apps.1234567890-abcdefg</string>
 	<key>CFBundleDisplayName</key>
-	<string>The Moments</string>
-
+	<string>Memory Desk</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +17,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>the_moments</string>
+	<string>memory_desk</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -26,19 +28,16 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -46,26 +45,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
-	<!-- 🔑 Разрешения для камеры/галереи -->
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Нужно, чтобы выбрать фон вашей доски.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Нужно, чтобы добавить фото к воспоминанию.</string>
-
-	<!-- 🔑 URL-схемы для Google Sign-In -->
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.42806266503-1nl9f87fgnabn8pk2151172t2nm2rlcp</string>
-			</array>
-		</dict>
-	</array>
-
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_desk/presentation/add_images/add_image_view_model.dart';
 import 'package:memory_desk/presentation/auth/auth_view.dart';
@@ -11,8 +12,12 @@ import 'package:memory_desk/presentation/loading/loading_view_model.dart';
 import 'package:memory_desk/service_locator.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   register();
   runApp(MyApp());
 }
