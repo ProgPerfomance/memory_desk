@@ -1,4 +1,5 @@
 import 'package:memory_desk/data/services/remote_service.dart';
+import 'package:memory_desk/data/services/user_id_service.dart';
 import 'package:memory_desk/domain/entities/user_entity.dart';
 
 import '../services/google_auth_service.dart';
@@ -13,16 +14,17 @@ class UserRepository {
   Future<bool> loginUserByGoogle() async {
     try {
       final googleAuth = GoogleAuthService();
-      final user = await googleAuth.signIn();
-      if (user != null) {
-        print("Имя: ${user['username']}");
-        print("Email: ${user['email']}");
-        print("Аватар: ${user['avatar']}");
+      final u = await googleAuth.signIn();
+      if (u != null) {
+        print("Имя: ${u['username']}");
+        print("Email: ${u['email']}");
+        print("Аватар: ${u['avatar']}");
         final response = await RemoteService.loginUserByGoogle(
-          user['email'] ?? "",
-          user['username'] ?? "",
+          u['email'] ?? "",
+          u['username'] ?? "",
         );
         _activeUser = UserEntity.fromApi(response.data);
+        await UserIdService.saveUserId(user.id);
         return true;
       } else {
         print("Вход отменён");
