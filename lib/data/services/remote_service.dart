@@ -23,4 +23,23 @@ class RemoteService {
     final response = await dio.get("/desk/images/$deskId");
     return response;
   }
+
+  static Future<Response> loginUserByEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    final response = await dio.post(
+      "/users/login/email",
+      data: {"email": email, "password": password},
+    );
+    return response;
+  }
+
+  static Future<Response> loginUserByGoogle(String email, String name) async {
+    final response = await dio.post(
+      "/users/login/google",
+      data: {"email": email, "name": name},
+    );
+    return response;
+  }
 }

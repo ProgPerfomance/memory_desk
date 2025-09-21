@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_desk/presentation/add_images/add_image_view_model.dart';
+import 'package:memory_desk/presentation/auth/auth_view.dart';
+import 'package:memory_desk/presentation/auth/auth_view_model.dart';
 import 'package:memory_desk/presentation/create_desk/create_desk_view_model.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view_model.dart';
@@ -24,11 +26,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => DeskListViewModel()),
         ChangeNotifierProvider(create: (context) => GalleryViewModel()),
         ChangeNotifierProvider(create: (context) => UploadPhotosViewModel()),
+        ChangeNotifierProvider(create: (context) => AuthViewModel()),
       ],
-      child: MaterialApp(
-        home: BoardsListView(),
-        debugShowCheckedModeBanner: false,
-      ),
+      child: MaterialApp(home: AuthView(), debugShowCheckedModeBanner: false),
     );
   }
 }
