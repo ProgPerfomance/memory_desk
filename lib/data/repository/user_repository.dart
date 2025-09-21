@@ -37,4 +37,8 @@ class UserRepository {
   }
 
   Future<void> loginUserByVk() async {}
+
+  void updateLocalUserData(UserEntity userData) async {
+    _activeUser = userData;
+  }
 }

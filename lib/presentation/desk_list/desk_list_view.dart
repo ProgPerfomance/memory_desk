@@ -3,6 +3,7 @@ import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view.dart';
 import 'package:provider/provider.dart';
+import '../gallery/widgets/action_button.dart';
 import 'desk_list_view_model.dart';
 
 class BoardsListView extends StatelessWidget {
@@ -259,7 +260,7 @@ class _BoardCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
-                        child: _TitleAndDescription(
+                        child: TitleAndDescription(
                           title: board.name,
                           description: board.description,
                         ),
@@ -295,10 +296,10 @@ class _BoardImage extends StatelessWidget {
   }
 }
 
-class _TitleAndDescription extends StatelessWidget {
+class TitleAndDescription extends StatelessWidget {
   final String title;
   final String description;
-  const _TitleAndDescription({required this.title, required this.description});
+  const TitleAndDescription({required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {

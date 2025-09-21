@@ -33,6 +33,7 @@ class DeskEntity {
       "backgroundUrl": backgroundUrl,
       "userId": userId,
       "privacy": privacy,
+      "id": id,
     };
   }
 }

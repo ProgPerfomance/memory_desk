@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:memory_desk/core/api_routes.dart';
+import 'package:memory_desk/domain/entities/desk_entity.dart';
 
 class RemoteService {
   static final dio = Dio(BaseOptions(baseUrl: baseUrl));
@@ -40,6 +41,16 @@ class RemoteService {
       "/users/login/google",
       data: {"email": email, "name": name},
     );
+    return response;
+  }
+
+  static Future<Response> getUserById(String userId) async {
+    final response = await dio.get("/users/get/$userId");
+    return response;
+  }
+
+  static Future<Response> updateDesk(Map data) async {
+    final response = await dio.put("/desk/update", data: data);
     return response;
   }
 }

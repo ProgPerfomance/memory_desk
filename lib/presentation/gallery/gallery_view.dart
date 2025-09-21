@@ -4,11 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
+import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
+import 'package:memory_desk/presentation/edit_desk/edit_desk_view.dart';
+import 'package:memory_desk/presentation/gallery/widgets/action_button.dart';
+import 'package:memory_desk/presentation/gallery/widgets/photo_card.dart';
 import 'package:provider/provider.dart';
 
 import 'gallery_view_model.dart';
 import '../add_images/add_images_view.dart';
-import '../open_image/open_image_view.dart'; // твой просмотрщик
 
 class GalleryView extends StatelessWidget {
   final String deskId;
@@ -53,7 +56,6 @@ class _GalleryScreen extends StatelessWidget {
 
               if (!vm.isLoading && vm.error != null)
                 ListView(
-                  // чтобы тянулось для refresh
                   children: [
                     const SizedBox(height: 120),
                     Center(
@@ -111,31 +113,53 @@ class _GalleryScreen extends StatelessWidget {
               Positioned(
                 bottom: 20,
                 right: 20,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ActionButton(
-                      icon: Icons.add,
-                      onTap: () async {
-                        // Переходим на экран добавления и ждём результат,
-                        // затем перезагружаем галерею
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => UploadPhotosView(deskId: deskId),
+                left: 20,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width - 40,
+                  child: Row(
+                    children: [
+                      TitleAndDescription(
+                        title: desk.name,
+                        description: desk.description,
+                      ),
+                      Spacer(),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ActionButton(
+                            icon: Icons.add,
+                            onTap: () async {
+                              // Переходим на экран добавления и ждём результат,
+                              // затем перезагружаем галерею
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => UploadPhotosView(deskId: deskId),
+                                ),
+                              );
+                              await context.read<GalleryViewModel>().refresh(
+                                deskId,
+                              );
+                            },
                           ),
-                        );
-                        await context.read<GalleryViewModel>().refresh(deskId);
-                      },
-                    ),
-                    const SizedBox(height: 14),
-                    ActionButton(
-                      icon: Icons.edit,
-                      onTap: () {
-                        // TODO: редактировать доску
-                      },
-                    ),
-                  ],
+                          const SizedBox(height: 14),
+                          ActionButton(
+                            icon: Icons.edit,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => EditDeskView(desk: desk),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Positioned(
@@ -168,136 +192,7 @@ class _GalleryScreen extends StatelessWidget {
   }
 }
 
-class ActionButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-
-  const ActionButton({required this.icon, required this.onTap, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      shape: const CircleBorder(),
-      color: Colors.black87,
-      elevation: 4,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: SizedBox(
-          width: 56,
-          height: 56,
-          child: Icon(icon, color: Colors.white, size: 28),
-        ),
-      ),
-    );
-  }
-}
-
-class PhotoCard extends StatelessWidget {
-  final String imageUrl;
-  final String? caption;
-  final int index;
-  final List<String> allUrls;
-
-  const PhotoCard({
-    super.key,
-    required this.imageUrl,
-    required this.index,
-    required this.allUrls,
-    this.caption,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: _randomAngle(),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => PhotoViewer(photos: allUrls, initialIndex: index),
-            ),
-          );
-        },
-        child: Hero(
-          tag: imageUrl,
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white, width: 2),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x33000000),
-                  blurRadius: 12,
-                  offset: Offset(0, 6),
-                ),
-              ],
-            ),
-            clipBehavior: Clip.hardEdge,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Image.network(imageUrl, fit: BoxFit.cover),
-                if (caption != null && caption!.isNotEmpty)
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.45),
-                          ],
-                        ),
-                      ),
-                      child: Text(
-                        caption!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          shadows: [
-                            Shadow(color: Colors.black38, blurRadius: 4),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                Positioned(
-                  top: -8,
-                  right: -8,
-                  child: SizedBox(
-                    width: 34,
-                    height: 34,
-                    child: Image.asset(
-                      "assets/images/pinned.png",
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-double _randomAngle() {
+double randomAngle() {
   final random = Random();
   final degrees = -8 + random.nextInt(17);
   return degrees * pi / 180;
