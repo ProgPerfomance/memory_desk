@@ -15,4 +15,11 @@ class UserIdService {
     final String? userId = await sharedPreferences.getString("userId");
     return userId;
   }
+
+  static Future<void> deleteUserId() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+
+    await sharedPreferences.remove("userId");
+  }
 }

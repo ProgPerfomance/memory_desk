@@ -3,6 +3,7 @@ import 'package:memory_desk/core/theme/colors.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view.dart';
+import 'package:memory_desk/presentation/profile/profile_view.dart';
 import 'package:provider/provider.dart';
 import '../gallery/widgets/action_button.dart';
 import 'desk_list_view_model.dart';
@@ -42,9 +43,30 @@ class _BoardsListScreen extends StatelessWidget {
               child: Column(
                 children: [
                   if (vm.isLoading) const LinearProgressIndicator(minHeight: 2),
-                  const _Header(),
-                  //   const SizedBox(height: 12),
-                  // const _MyAllSegmented(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 14),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileView(email: ""),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: 42,
+                          width: 42,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   Expanded(
                     child: RefreshIndicator(

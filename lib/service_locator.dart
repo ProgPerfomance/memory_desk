@@ -8,3 +8,7 @@ void register() {
   getIt.registerSingleton(DeskRepository());
   getIt.registerSingleton(UserRepository());
 }
+
+Future<void> resetDI() async {
+  await getIt.reset();
+}
