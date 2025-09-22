@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_desk/domain/entities/desk_image_entity.dart';
 
 import '../../open_image/open_image_view.dart';
 import '../gallery_view.dart';
@@ -7,7 +8,7 @@ class PhotoCard extends StatelessWidget {
   final String imageUrl;
   final String? caption;
   final int index;
-  final List<String> allUrls;
+  final List<DeskImageEntity> allUrls;
 
   const PhotoCard({
     super.key,

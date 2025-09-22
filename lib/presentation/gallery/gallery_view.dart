@@ -104,7 +104,7 @@ class _GalleryScreen extends StatelessWidget {
                       imageUrl: img.imageUrl,
                       caption: img.caption,
                       index: index,
-                      allUrls: vm.deskPhotos.map((e) => e.imageUrl).toList(),
+                      allUrls: vm.deskPhotos,
                     );
                   },
                 ),

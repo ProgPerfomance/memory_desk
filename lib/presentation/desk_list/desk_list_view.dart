@@ -138,7 +138,7 @@ class _MyAllSegmented extends StatelessWidget {
           children: [
             _SegmentButton(label: 'Мои', selected: true),
             const SizedBox(width: 6),
-            _SegmentButton(label: 'Все', selected: false),
+            _SegmentButton(label: 'Друзья', selected: false),
           ],
         ),
       ),
@@ -267,7 +267,7 @@ class _BoardCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      _PhotoCounter(count: 0),
+                      _PhotoCounter(count: board.imagesCount ?? 0),
                     ],
                   ),
                 ),
