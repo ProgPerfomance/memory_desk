@@ -6,6 +6,14 @@ class AuthViewModel extends ChangeNotifier {
   final UserRepository _userRepository = getIt.get<UserRepository>();
 
   Future<bool> loginUserWithGoogle() async {
+    notifyListeners();
     return await _userRepository.loginUserByGoogle();
+  }
+
+  Future<bool> loginUserWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    return await _userRepository.loginUserByEmailAndPassword(email, password);
   }
 }

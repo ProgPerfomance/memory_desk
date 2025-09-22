@@ -5,6 +5,7 @@ class DeskEntity {
   final String backgroundUrl;
   final String userId;
   final String privacy;
+  final int? imagesCount;
 
   DeskEntity({
     required this.id,
@@ -13,6 +14,7 @@ class DeskEntity {
     required this.description,
     required this.backgroundUrl,
     required this.privacy,
+    required this.imagesCount,
   });
 
   factory DeskEntity.fromApi(Map map) {
@@ -23,6 +25,7 @@ class DeskEntity {
       description: map['description'],
       backgroundUrl: map['backgroundUrl'],
       privacy: map['privacy'],
+      imagesCount: map['imagesCount'],
     );
   }
 

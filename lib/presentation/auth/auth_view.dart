@@ -3,6 +3,9 @@ import 'package:memory_desk/presentation/auth/auth_view_model.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
 import 'package:provider/provider.dart';
 
+final TextEditingController _emailController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
+
 class AuthView extends StatelessWidget {
   const AuthView({super.key});
 
@@ -31,20 +34,37 @@ class AuthView extends StatelessWidget {
               ),
               const SizedBox(height: 48),
 
-              const _LabeledField(
+              _LabeledField(
                 label: "Email",
                 icon: Icons.email_outlined,
                 obscure: false,
+                controller: _emailController,
               ),
               const SizedBox(height: 16),
-              const _LabeledField(
+              _LabeledField(
+                controller: _passwordController,
                 label: "Пароль",
                 icon: Icons.lock_outline,
                 obscure: true,
               ),
               const SizedBox(height: 24),
 
-              _PrimaryButton(text: "Войти", onTap: _loginTap),
+              _PrimaryButton(
+                text: "Войти",
+                onTap: () async {
+                  final bool success = await vm.loginUserWithEmailAndPassword(
+                    _emailController.text,
+                    _passwordController.text,
+                  );
+                  print(success);
+                  if (success == true) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BoardsListView()),
+                    );
+                  }
+                },
+              ),
               const SizedBox(height: 32),
 
               Row(
@@ -61,17 +81,17 @@ class AuthView extends StatelessWidget {
 
               Row(
                 children: [
-                  Expanded(
-                    child: _SocialButton(
-                      text: "VK",
-                      icon: Icons.people,
-                      background: const Color(0xFF2787F5),
-                      textColor: Colors.white,
-                      borderColor: Colors.transparent,
-                      onTap: _vkTap,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
+                  // Expanded(
+                  //   child: _SocialButton(
+                  //     text: "VK",
+                  //     icon: Icons.people,
+                  //     background: const Color(0xFF2787F5),
+                  //     textColor: Colors.white,
+                  //     borderColor: Colors.transparent,
+                  //     onTap: _vkTap,
+                  //   ),
+                  // ),
+                  // const SizedBox(width: 16),
                   Expanded(
                     child: _SocialButton(
                       text: "Google",
@@ -82,13 +102,22 @@ class AuthView extends StatelessWidget {
                       onTap: () async {
                         bool success = await vm.loginUserWithGoogle();
                         if (success == true) {
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => BoardsListView(),
                             ),
-                            (v) => false,
                           );
+                          //  if (!context.mounted) return;
+                          // WidgetsBinding.instance.addPostFrameCallback((_) {
+                          //   Navigator.pushAndRemoveUntil(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (_) => const BoardsListView(),
+                          //     ),
+                          //     (route) => false,
+                          //   );
+                          // });
                         }
                       },
                     ),
@@ -108,16 +137,19 @@ class _LabeledField extends StatelessWidget {
   final String label;
   final IconData icon;
   final bool obscure;
+  final TextEditingController controller;
   const _LabeledField({
     required this.label,
     required this.icon,
     required this.obscure,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       obscureText: obscure,
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),

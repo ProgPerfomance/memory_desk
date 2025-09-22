@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_desk/core/theme/colors.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view.dart';
@@ -31,7 +32,7 @@ class _BoardsListScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF5ED),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Stack(
           children: [

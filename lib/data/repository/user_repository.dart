@@ -9,25 +9,42 @@ class UserRepository {
 
   UserEntity get user => _activeUser!;
 
-  Future<void> loginUserByEmailAndPassword() async {}
+  Future<bool> loginUserByEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final response = await RemoteService.loginUserByEmailAndPassword(
+        email,
+        password,
+      );
+
+      if (response.data["e"] != null) {
+        return false;
+      }
+
+      _activeUser = UserEntity.fromApi(response.data);
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
   Future<bool> loginUserByGoogle() async {
     try {
       final googleAuth = GoogleAuthService();
       final u = await googleAuth.signIn();
       if (u != null) {
-        print("Имя: ${u['username']}");
-        print("Email: ${u['email']}");
-        print("Аватар: ${u['avatar']}");
         final response = await RemoteService.loginUserByGoogle(
-          u['email'] ?? "",
-          u['username'] ?? "",
+          u.email ?? "",
+          u.displayName ?? "",
         );
         _activeUser = UserEntity.fromApi(response.data);
         await UserIdService.saveUserId(user.id);
         return true;
       } else {
-        print("Вход отменён");
         return false;
       }
     } catch (e) {

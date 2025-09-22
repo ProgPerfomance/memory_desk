@@ -67,6 +67,7 @@ class CreateDeskViewModel extends ChangeNotifier {
   Future<void> createDesk(String name, String description) async {
     await _deskRepository.createDesk(
       DeskEntity(
+        imagesCount: 0,
         privacy: privacyType.name,
         id: null,
         name: name,

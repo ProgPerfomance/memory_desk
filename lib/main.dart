@@ -9,6 +9,7 @@ import 'package:memory_desk/presentation/desk_list/desk_list_view_model.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view_model.dart';
 import 'package:memory_desk/presentation/loading/loading_view.dart';
 import 'package:memory_desk/presentation/loading/loading_view_model.dart';
+import 'package:memory_desk/presentation/profile/profile_view_model.dart';
 import 'package:memory_desk/service_locator.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UploadPhotosViewModel()),
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
         ChangeNotifierProvider(create: (context) => LoadingViewModel()),
+        ChangeNotifierProvider(create: (context) => ProfileViewModel()),
       ],
       child: MaterialApp(
         home: LoadingView(),
