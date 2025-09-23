@@ -6,6 +6,7 @@ import 'package:memory_desk/presentation/auth/auth_view_model.dart';
 import 'package:memory_desk/presentation/create_desk/create_desk_view_model.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view_model.dart';
+import 'package:memory_desk/presentation/edit_image/edit_image_view_model.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view_model.dart';
 import 'package:memory_desk/presentation/loading/loading_view.dart';
 import 'package:memory_desk/presentation/loading/loading_view_model.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
         ChangeNotifierProvider(create: (context) => LoadingViewModel()),
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
+        //  ChangeNotifierProvider(create: (context) => PhotoEditorViewModel()),
       ],
       child: MaterialApp(
         home: LoadingView(),

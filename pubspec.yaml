@@ -24,6 +24,7 @@ dependencies:
   shared_preferences:
   firebase_core:
   firebase_auth:
+  crop_your_image:
 
 dev_dependencies:
   flutter_test:

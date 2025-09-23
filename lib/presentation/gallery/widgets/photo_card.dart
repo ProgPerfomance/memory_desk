@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:memory_desk/domain/entities/desk_image_entity.dart';
+import 'package:provider/provider.dart';
 
 import '../../open_image/open_image_view.dart';
 import '../gallery_view.dart';
+import '../gallery_view_model.dart';
 
 class PhotoCard extends StatelessWidget {
   final String imageUrl;
@@ -10,6 +12,7 @@ class PhotoCard extends StatelessWidget {
   final int index;
   final List<DeskImageEntity> allUrls;
   final double? rotation;
+  final DeskImageEntity image;
 
   const PhotoCard({
     super.key,
@@ -18,6 +21,7 @@ class PhotoCard extends StatelessWidget {
     required this.allUrls,
     this.caption,
     required this.rotation,
+    required this.image,
   });
 
   @override
@@ -25,6 +29,11 @@ class PhotoCard extends StatelessWidget {
     return Transform.rotate(
       angle: rotation ?? 0,
       child: GestureDetector(
+        onLongPress: () {
+          showRotateOverlay(context, image, (newRotation) {
+            //  context.read<GalleryViewModel>().updateRotation(image, newRotation);
+          });
+        },
         onTap: () {
           Navigator.push(
             context,
@@ -52,7 +61,10 @@ class PhotoCard extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                Image.network(imageUrl, fit: BoxFit.cover),
+                ClipRRect(
+                  child: Image.network(imageUrl, fit: BoxFit.cover),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 if (caption != null && caption!.isNotEmpty)
                   Positioned(
                     left: 0,

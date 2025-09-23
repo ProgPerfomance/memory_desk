@@ -1,5 +1,6 @@
 // gallery_view.dart
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -10,6 +11,7 @@ import 'package:memory_desk/presentation/gallery/widgets/action_button.dart';
 import 'package:memory_desk/presentation/gallery/widgets/photo_card.dart';
 import 'package:provider/provider.dart';
 
+import '../../domain/entities/desk_image_entity.dart';
 import 'gallery_view_model.dart';
 import '../add_images/add_images_view.dart';
 
@@ -101,6 +103,7 @@ class _GalleryScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final img = vm.deskPhotos[index];
                     return PhotoCard(
+                      image: img,
                       rotation: img.rotation,
                       imageUrl: img.imageUrl,
                       caption: img.caption,
@@ -197,4 +200,182 @@ double randomAngle() {
   final random = Random();
   final degrees = -8 + random.nextInt(17);
   return degrees * pi / 180;
+}
+
+void showRotateOverlay(
+  BuildContext context,
+  DeskImageEntity img,
+  Function(double) onSave,
+) {
+  double tempRotation = img.rotation ?? 0;
+
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: '',
+    barrierColor: Colors.black.withOpacity(0.4),
+    pageBuilder: (context, anim1, anim2) {
+      return _RotateOverlayContent(
+        imageUrl: img.imageUrl,
+        initialRotation: tempRotation,
+        onSave: onSave,
+      );
+    },
+  );
+}
+
+class _RotateOverlayContent extends StatefulWidget {
+  final String imageUrl;
+  final double initialRotation;
+  final Function(double) onSave;
+
+  const _RotateOverlayContent({
+    required this.imageUrl,
+    required this.initialRotation,
+    required this.onSave,
+  });
+
+  @override
+  State<_RotateOverlayContent> createState() => _RotateOverlayContentState();
+}
+
+class _RotateOverlayContentState extends State<_RotateOverlayContent>
+    with TickerProviderStateMixin {
+  late double tempRotation;
+  late AnimationController _hintController;
+  late AnimationController _iconController;
+  late Animation<double> _hintAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    tempRotation = widget.initialRotation;
+
+    // контроллер "качания"
+    _hintController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _hintAnimation = Tween<double>(begin: -0.15, end: 0.15).animate(
+      CurvedAnimation(parent: _hintController, curve: Curves.easeInOut),
+    );
+
+    // контроллер появления иконки 🔄
+    _iconController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    // запускаем "качание" + иконку при старте
+    Future.delayed(const Duration(milliseconds: 200), () async {
+      await _iconController.forward();
+      _hintController.forward().then((_) => _hintController.reverse());
+      await Future.delayed(const Duration(milliseconds: 1000));
+      if (mounted) await _iconController.reverse();
+    });
+  }
+
+  @override
+  void dispose() {
+    _hintController.dispose();
+    _iconController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          // блюр задника
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Container(color: Colors.black.withOpacity(0.2)),
+          ),
+
+          // фото по центру с gesture
+          Center(
+            child: GestureDetector(
+              onPanUpdate: (details) {
+                setState(() {
+                  tempRotation += details.delta.dx * 0.01;
+                });
+              },
+              child: AnimatedBuilder(
+                animation: _hintController,
+                builder: (context, child) {
+                  final hintAngle =
+                      _hintController.isAnimating ? _hintAnimation.value : 0.0;
+                  return Transform.rotate(
+                    angle: tempRotation + hintAngle,
+                    child: child,
+                  );
+                },
+                child: Image.network(widget.imageUrl, width: 280),
+              ),
+            ),
+          ),
+
+          // 🔄 иконка-подсказка
+          Center(
+            child: FadeTransition(
+              opacity: _iconController,
+              child: const Icon(
+                Icons.rotate_right,
+                size: 64,
+                color: Colors.white70,
+              ),
+            ),
+          ),
+
+          // панель управления
+          Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.black,
+                      size: 28,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.check_circle,
+                      color: Colors.black,
+                      size: 28,
+                    ),
+                    onPressed: () {
+                      widget.onSave(tempRotation);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

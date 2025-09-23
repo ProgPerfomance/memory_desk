@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_desk/domain/entities/desk_image_entity.dart';
+import 'package:memory_desk/presentation/edit_frame/edit_frame_view.dart';
+import 'package:memory_desk/presentation/edit_image/edit_image_view.dart';
 
 class PhotoViewer extends StatefulWidget {
   final List<DeskImageEntity> photos;
@@ -136,20 +138,42 @@ class _PhotoViewerState extends State<PhotoViewer>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      _MenuButton(
-                        icon: Icons.auto_fix_high,
-                        label: "Фото-редактор",
-                        onTap: () {
-                          // TODO: открыть фото-редактор
-                          _toggleMenu();
-                        },
-                      ),
+                      // _MenuButton(
+                      //   icon: Icons.auto_fix_high,
+                      //   label: "Фото-редактор",
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder:
+                      //             (context) => PhotoEditorView(
+                      //               imageUrl:
+                      //                   widget
+                      //                       .photos[widget.initialIndex]
+                      //                       .imageUrl,
+                      //             ),
+                      //       ),
+                      //     );
+                      //     _toggleMenu();
+                      //   },
+                      // ),
                       const SizedBox(height: 8),
                       _MenuButton(
                         icon: Icons.crop_square,
                         label: "Изменить рамку",
                         onTap: () {
-                          // TODO: изменить рамку
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => FrameEditorView(
+                                    imageUrl:
+                                        widget
+                                            .photos[widget.initialIndex]
+                                            .imageUrl,
+                                  ),
+                            ),
+                          );
                           _toggleMenu();
                         },
                       ),
