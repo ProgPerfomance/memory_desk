@@ -269,11 +269,11 @@ class _BoardCard extends StatelessWidget {
                   child: _PrivacyChip(privacy: board.privacy),
                 ),
                 // Кнопка меню (правый верх, визуально в стиле рефа)
-                const Positioned(
-                  top: 6,
-                  right: 6,
-                  child: _RoundIcon(icon: Icons.more_vert),
-                ),
+                // const Positioned(
+                //   top: 6,
+                //   right: 6,
+                //   child: _RoundIcon(icon: Icons.more_vert),
+                // ),
                 // Низ: заголовок, описание, счётчик фото
                 Positioned(
                   left: 16,

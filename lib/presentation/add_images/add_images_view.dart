@@ -55,6 +55,7 @@ class UploadPhotosView extends StatelessWidget {
                                   .read<UploadPhotosViewModel>()
                                   .uploadedPayload;
                           if (payload.isNotEmpty) {
+                            context.read<UploadPhotosViewModel>().clearAll();
                             Navigator.pop(context);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(

@@ -100,7 +100,6 @@ class UploadPhotosViewModel extends ChangeNotifier {
 
     isUploading = false;
     await _deskRepository.uploadImagesToDesk(photos, deskId);
-    //photos = [];
     notifyListeners();
   }
 
