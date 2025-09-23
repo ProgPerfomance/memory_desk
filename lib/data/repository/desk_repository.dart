@@ -2,6 +2,7 @@ import 'package:memory_desk/data/services/remote_service.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/domain/entities/desk_image_entity.dart';
 import 'package:memory_desk/presentation/add_images/add_image_view_model.dart';
+import 'package:memory_desk/presentation/gallery/gallery_view.dart';
 
 class DeskRepository {
   Future<void> createDesk(DeskEntity desk) async {
@@ -27,6 +28,7 @@ class DeskRepository {
                   "imageUrl": v.uploadedUrl ?? "",
                   "caption": v.caption,
                   "deskId": deskId,
+                  "rotation": randomAngle(),
                 },
               )
               .toList(),

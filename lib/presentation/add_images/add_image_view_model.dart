@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:memory_desk/core/api_routes.dart';
 import 'package:memory_desk/data/repository/desk_repository.dart';
+import 'package:memory_desk/presentation/gallery/gallery_view.dart';
 import 'package:memory_desk/service_locator.dart';
 
 enum UploadStatus { pending, uploading, success, error }
@@ -105,10 +106,16 @@ class UploadPhotosViewModel extends ChangeNotifier {
 
   /// Готовый массив для следующего шага:
   /// [{ "imageUrl": "...", "caption": "..." }, ...]
-  List<Map<String, String>> get uploadedPayload {
+  List<Map<String, dynamic>> get uploadedPayload {
     return photos
         .where((p) => p.status == UploadStatus.success && p.uploadedUrl != null)
-        .map((p) => {'imageUrl': p.uploadedUrl!, 'caption': p.caption})
+        .map(
+          (p) => {
+            'imageUrl': p.uploadedUrl!,
+            'caption': p.caption,
+            "rotation": randomAngle(),
+          },
+        )
         .toList();
   }
 

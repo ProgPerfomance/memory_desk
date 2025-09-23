@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:memory_desk/core/theme/colors.dart'; // AppColors.background = #FAF5ED
+import 'package:memory_desk/core/theme/colors.dart';
+import 'package:memory_desk/presentation/auth/auth_view.dart';
+import 'package:memory_desk/presentation/profile/profile_view_model.dart';
+import 'package:provider/provider.dart'; // AppColors.background = #FAF5ED
 
 class ProfileView extends StatelessWidget {
   const ProfileView({
@@ -27,7 +30,7 @@ class ProfileView extends StatelessWidget {
     const _textPrimary = Color(0xFF333333);
     const _textSecondary = Color(0xFF808080);
     const _danger = Color(0xFFFA1654);
-
+    final vm = Provider.of<ProfileViewModel>(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -75,7 +78,14 @@ class ProfileView extends StatelessWidget {
           _ActionRow(
             icon: Icons.exit_to_app,
             label: 'Выйти',
-            onTap: onSignOut,
+            onTap: () async {
+              await vm.logout();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => AuthView()),
+                (v) => false,
+              );
+            },
             textColor: _textPrimary,
           ),
           const _ThinDivider(),

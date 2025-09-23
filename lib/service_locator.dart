@@ -11,4 +11,5 @@ void register() {
 
 Future<void> resetDI() async {
   await getIt.reset();
+  register();
 }

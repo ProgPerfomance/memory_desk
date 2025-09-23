@@ -9,6 +9,7 @@ class PhotoCard extends StatelessWidget {
   final String? caption;
   final int index;
   final List<DeskImageEntity> allUrls;
+  final double? rotation;
 
   const PhotoCard({
     super.key,
@@ -16,12 +17,13 @@ class PhotoCard extends StatelessWidget {
     required this.index,
     required this.allUrls,
     this.caption,
+    required this.rotation,
   });
 
   @override
   Widget build(BuildContext context) {
     return Transform.rotate(
-      angle: randomAngle(),
+      angle: rotation ?? 0,
       child: GestureDetector(
         onTap: () {
           Navigator.push(

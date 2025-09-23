@@ -101,6 +101,7 @@ class _GalleryScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final img = vm.deskPhotos[index];
                     return PhotoCard(
+                      rotation: img.rotation,
                       imageUrl: img.imageUrl,
                       caption: img.caption,
                       index: index,
