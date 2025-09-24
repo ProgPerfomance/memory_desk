@@ -64,4 +64,10 @@ class UserRepository {
     await UserIdService.deleteUserId();
     await resetDI();
   }
+
+  Future<List<UserEntity>> searchUsers(String query) async {
+    final response = await RemoteService.searchUsers(query);
+    List data = response.data['results'];
+    return data.map((v) => UserEntity.fromApi(v)).toList();
+  }
 }

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'invite_to_board_view_model.dart';
+import 'package:memory_desk/domain/entities/user_entity.dart';
 
 class InviteToBoardView extends StatefulWidget {
   final String boardLink;
-  const InviteToBoardView({super.key, required this.boardLink});
+  final String deskId;
+  const InviteToBoardView({
+    super.key,
+    required this.boardLink,
+    required this.deskId,
+  });
 
   @override
   State<InviteToBoardView> createState() => _InviteToBoardViewState();
@@ -12,50 +20,15 @@ class InviteToBoardView extends StatefulWidget {
 class _InviteToBoardViewState extends State<InviteToBoardView> {
   final TextEditingController _controller = TextEditingController();
 
-  // Моковые юзеры
-  final List<UserData> allUsers = [
-    UserData(
-      username: "@barsik",
-      name: "Кот Барсик",
-      email: "barsik@example.com",
-      avatarUrl: "https://i.pravatar.cc/150?img=1",
-    ),
-    UserData(
-      username: "@masha",
-      name: "Маша Иванова",
-      email: "masha@mail.com",
-      avatarUrl: "https://i.pravatar.cc/150?img=2",
-    ),
-    UserData(
-      username: "@petr",
-      name: "Пётр Петров",
-      email: "petr@gmail.com",
-      avatarUrl: "https://i.pravatar.cc/150?img=3",
-    ),
-    UserData(
-      username: "@katya",
-      name: "Катя Смирнова",
-      email: "katya@ya.ru",
-      avatarUrl: "https://i.pravatar.cc/150?img=4",
-    ),
-  ];
-
-  List<UserData> filteredUsers = [];
-
-  void _onSearchChanged(String query) {
-    setState(() {
-      filteredUsers =
-          allUsers.where((u) {
-            final q = query.toLowerCase();
-            return u.username.toLowerCase().contains(q) ||
-                (u.name?.toLowerCase().contains(q) ?? false) ||
-                u.email.toLowerCase().contains(q);
-          }).toList();
-    });
+  void _onSearchChanged(BuildContext context, String query) {
+    final vm = context.read<InviteToBoardViewModel>();
+    vm.searchUsers(query);
   }
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<InviteToBoardViewModel>();
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAF5ED),
       appBar: AppBar(
@@ -127,16 +100,12 @@ class _InviteToBoardViewState extends State<InviteToBoardView> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextField(
               controller: _controller,
-              onChanged: _onSearchChanged,
+              onChanged: (q) => _onSearchChanged(context, q),
               decoration: InputDecoration(
                 hintText: "Введите имя, username или email",
                 filled: true,
                 fillColor: Colors.white,
                 prefixIcon: const Icon(Icons.search),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide.none,
@@ -147,17 +116,17 @@ class _InviteToBoardViewState extends State<InviteToBoardView> {
 
           const SizedBox(height: 16),
 
-          // Найденные юзеры вертикально
+          // Найденные юзеры
           Expanded(
             child:
-                filteredUsers.isNotEmpty
+                vm.users.isNotEmpty
                     ? ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: filteredUsers.length,
+                      itemCount: vm.users.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
-                        final user = filteredUsers[index];
-                        return _UserCard(user: user);
+                        final user = vm.users[index];
+                        return _UserCard(user: user, deskId: widget.deskId);
                       },
                     )
                     : _controller.text.isNotEmpty
@@ -209,73 +178,68 @@ class _InviteToBoardViewState extends State<InviteToBoardView> {
   }
 }
 
-class UserData {
-  final String username;
-  final String? name;
-  final String email;
-  final String avatarUrl;
-
-  UserData({
-    required this.username,
-    this.name,
-    required this.email,
-    required this.avatarUrl,
-  });
-}
-
 class _UserCard extends StatelessWidget {
-  final UserData user;
-  const _UserCard({required this.user});
+  final UserEntity user;
+  final String deskId;
+  const _UserCard({required this.user, required this.deskId});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(user.avatarUrl),
-            radius: 28,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.name ?? user.username,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  user.username,
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
-                ),
-                Text(
-                  user.email,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 11, color: Colors.black45),
-                ),
-              ],
+    final vm = Provider.of<InviteToBoardViewModel>(context);
+    return GestureDetector(
+      onTap: () {
+        vm.inviteUserToDesk(user.id, deskId);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage:
+                  user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
+              radius: 28,
+              child: user.avatarUrl == null ? const Icon(Icons.person) : null,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.name ?? user.username,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    user.username,
+                    style: const TextStyle(fontSize: 12, color: Colors.black54),
+                  ),
+                  Text(
+                    user.email,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11, color: Colors.black45),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

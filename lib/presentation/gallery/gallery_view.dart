@@ -168,7 +168,9 @@ class _GalleryScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => GalleryPeoplesView(),
+                                  builder:
+                                      (context) =>
+                                          GalleryPeoplesView(deskId: deskId),
                                 ),
                               );
                             },

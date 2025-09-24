@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:memory_desk/presentation/invite_to_board/invite_to_board_view.dart';
 
 class GalleryPeoplesView extends StatelessWidget {
-  const GalleryPeoplesView({super.key});
+  final String deskId;
+  const GalleryPeoplesView({super.key, required this.deskId});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +134,10 @@ class GalleryPeoplesView extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) => InviteToBoardView(boardLink: boardLink),
+                          (context) => InviteToBoardView(
+                            boardLink: boardLink,
+                            deskId: deskId,
+                          ),
                     ),
                   );
                 },
