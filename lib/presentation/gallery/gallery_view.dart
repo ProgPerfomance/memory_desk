@@ -9,6 +9,7 @@ import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
 import 'package:memory_desk/presentation/edit_desk/edit_desk_view.dart';
 import 'package:memory_desk/presentation/gallery/widgets/action_button.dart';
 import 'package:memory_desk/presentation/gallery/widgets/photo_card.dart';
+import 'package:memory_desk/presentation/gallery_peoples/gallery_peoples_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/entities/desk_image_entity.dart';
@@ -156,6 +157,18 @@ class _GalleryScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder:
                                       (context) => EditDeskView(desk: desk),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: 14),
+                          ActionButton(
+                            icon: Icons.people,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GalleryPeoplesView(),
                                 ),
                               );
                             },

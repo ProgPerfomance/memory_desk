@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "W743JLNWZA.com.example.memoryDesk",
+        "paths": [
+          "*"
+        ]
+      }
+    ]
+  }
+}

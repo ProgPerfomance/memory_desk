@@ -5,25 +5,7 @@ import 'package:memory_desk/presentation/profile/profile_view_model.dart';
 import 'package:provider/provider.dart'; // AppColors.background = #FAF5ED
 
 class ProfileView extends StatelessWidget {
-  const ProfileView({
-    super.key,
-    this.name,
-    required this.email,
-    this.avatarUrl,
-    this.onSignOut,
-    this.onDeleteAccount,
-    this.onOpenPrivacy,
-    this.onOpenTerms,
-  });
-
-  final String? name;
-  final String email;
-  final String? avatarUrl;
-
-  final VoidCallback? onSignOut;
-  final VoidCallback? onDeleteAccount;
-  final VoidCallback? onOpenPrivacy;
-  final VoidCallback? onOpenTerms;
+  const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +37,17 @@ class ProfileView extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
             child: Row(
               children: [
-                _Avatar(
-                  avatarUrl: avatarUrl,
-                  fallbackText: _initials(name, email),
+                Center(
+                  child: _Avatar(
+                    avatarUrl: null,
+                    fallbackText: _initials(vm.user.name, vm.user.email),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _HeaderBlock(
-                    name: name,
-                    email: email,
+                    name: vm.user.name,
+                    email: vm.user.email,
                     textPrimary: _textPrimary,
                     textSecondary: _textSecondary,
                   ),
@@ -92,21 +76,21 @@ class ProfileView extends StatelessWidget {
           _ActionRow(
             icon: Icons.delete_outline,
             label: 'Удалить аккаунт',
-            onTap: onDeleteAccount,
+            onTap: () {},
             textColor: _danger,
           ),
           const _ThinDivider(),
           _ActionRow(
             icon: Icons.privacy_tip_outlined,
             label: 'Политика конфиденциальности',
-            onTap: onOpenPrivacy,
+            onTap: () {},
             textColor: _textPrimary,
           ),
           const _ThinDivider(),
           _ActionRow(
             icon: Icons.article_outlined,
             label: 'Пользовательское соглашение',
-            onTap: onOpenTerms,
+            onTap: () {},
             textColor: _textPrimary,
           ),
 

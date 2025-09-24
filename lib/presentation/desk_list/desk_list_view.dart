@@ -3,6 +3,7 @@ import 'package:memory_desk/core/theme/colors.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view.dart';
+import 'package:memory_desk/presentation/my_invites/my_invites_view.dart';
 import 'package:memory_desk/presentation/profile/profile_view.dart';
 import 'package:provider/provider.dart';
 import '../gallery/widgets/action_button.dart';
@@ -52,7 +53,7 @@ class _BoardsListScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfileView(email: ""),
+                              builder: (context) => ProfileView(),
                             ),
                           );
                         },
@@ -102,6 +103,18 @@ class _BoardsListScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Step1View()),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 12),
+                  ActionButton(
+                    icon: Icons.people,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyInvitesView(),
+                        ),
                       );
                     },
                   ),
