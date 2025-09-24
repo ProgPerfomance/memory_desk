@@ -53,4 +53,35 @@ class RemoteService {
     final response = await dio.put("/desk/update", data: data);
     return response;
   }
+
+  static Future<Response> getMyInvites(String userId) async {
+    final response = await dio.get("/invites/list/$userId");
+    return response;
+  }
+
+  static Future<Response> sendInvite(Map data) async {
+    final response = await dio.post("/invites/send", data: data);
+    return response;
+  }
+
+  static Future<Response> approveInvite(
+    String inviteId,
+    String recipientId,
+    String deskId,
+  ) async {
+    final response = await dio.put(
+      "/invites/approve/$inviteId/$recipientId/$deskId",
+    );
+    return response;
+  }
+
+  static Future<Response> declineInvite(String inviteId) async {
+    final response = await dio.put("/invites/decline/$inviteId");
+    return response;
+  }
+
+  static Future<Response> searchUsers(String query) async {
+    final response = await dio.post("/users/search", data: {"query": query});
+    return response;
+  }
 }
