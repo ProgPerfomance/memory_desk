@@ -25,6 +25,8 @@ dependencies:
   firebase_core:
   firebase_auth:
   crop_your_image:
+  url_launcher:
+
 
 dev_dependencies:
   flutter_test:

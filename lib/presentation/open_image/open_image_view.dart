@@ -126,92 +126,92 @@ class _PhotoViewerState extends State<PhotoViewer>
           ),
 
           // Кнопка "Редактировать"
-          Positioned(
-            bottom: 32,
-            right: 24,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                SizeTransition(
-                  sizeFactor: _fade,
-                  axisAlignment: -1.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // _MenuButton(
-                      //   icon: Icons.auto_fix_high,
-                      //   label: "Фото-редактор",
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder:
-                      //             (context) => PhotoEditorView(
-                      //               imageUrl:
-                      //                   widget
-                      //                       .photos[widget.initialIndex]
-                      //                       .imageUrl,
-                      //             ),
-                      //       ),
-                      //     );
-                      //     _toggleMenu();
-                      //   },
-                      // ),
-                      const SizedBox(height: 8),
-                      _MenuButton(
-                        icon: Icons.crop_square,
-                        label: "Изменить рамку",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => FrameEditorView(
-                                    imageUrl:
-                                        widget
-                                            .photos[widget.initialIndex]
-                                            .imageUrl,
-                                  ),
-                            ),
-                          );
-                          _toggleMenu();
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      _MenuButton(
-                        icon: Icons.delete,
-                        label: "Удалить фото",
-                        onTap: () {
-                          // TODO: удалить фото
-                          _toggleMenu();
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
-                ),
+          // Positioned(
+          //   bottom: 32,
+          //   right: 24,
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.end,
+          //     children: [
+          //       SizeTransition(
+          //         sizeFactor: _fade,
+          //         axisAlignment: -1.0,
+          //         child: Column(
+          //           crossAxisAlignment: CrossAxisAlignment.end,
+          //           children: [
+          // _MenuButton(
+          //   icon: Icons.auto_fix_high,
+          //   label: "Фото-редактор",
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder:
+          //             (context) => PhotoEditorView(
+          //               imageUrl:
+          //                   widget
+          //                       .photos[widget.initialIndex]
+          //                       .imageUrl,
+          //             ),
+          //       ),
+          //     );
+          //     _toggleMenu();
+          //   },
+          // ),
+          //    const SizedBox(height: 8),
+          // _MenuButton(
+          //   icon: Icons.crop_square,
+          //   label: "Изменить рамку",
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder:
+          //             (context) => FrameEditorView(
+          //               imageUrl:
+          //                   widget
+          //                       .photos[widget.initialIndex]
+          //                       .imageUrl,
+          //             ),
+          //       ),
+          //     );
+          //     _toggleMenu();
+          //   },
+          // ),
+          //       const SizedBox(height: 8),
+          //       _MenuButton(
+          //         icon: Icons.delete,
+          //         label: "Удалить фото",
+          //         onTap: () {
+          //           // TODO: удалить фото
+          //           _toggleMenu();
+          //         },
+          //       ),
+          //       const SizedBox(height: 16),
+          //     ],
+          //   ),
+          // ),
 
-                // Внутри Positioned вместо FloatingActionButton:
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 24.0),
-                  child: GestureDetector(
-                    onTap: _toggleMenu,
-                    child: AnimatedRotation(
-                      turns:
-                          _menuOpen ? 0.25 : 0.0, // лёгкий поворот при открытии
-                      duration: const Duration(milliseconds: 250),
-                      child: Icon(
-                        Icons
-                            .auto_fix_high, // ✨ или можно Icons.more_vert для более нейтрального стиля
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Внутри Positioned вместо FloatingActionButton:
+          // Padding(
+          //   padding: const EdgeInsets.only(bottom: 24.0),
+          //   child: GestureDetector(
+          //     onTap: _toggleMenu,
+          //     child: AnimatedRotation(
+          //       turns:
+          //           _menuOpen ? 0.25 : 0.0, // лёгкий поворот при открытии
+          //       duration: const Duration(milliseconds: 250),
+          //       child: Icon(
+          //         Icons
+          //             .auto_fix_high, // ✨ или можно Icons.more_vert для более нейтрального стиля
+          //         color: Colors.white,
+          //         size: 28,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          //   ],
+          // ),
+          //  ),
         ],
       ),
     );

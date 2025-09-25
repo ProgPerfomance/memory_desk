@@ -40,4 +40,8 @@ class DeskRepository {
     List data = response.data;
     return data.map((v) => DeskImageEntity.fromApi(v)).toList();
   }
+
+  Future<void> updateImageRotation(String imageId, double rotation) async {
+    final response = await RemoteService.updateImageRotation(imageId, rotation);
+  }
 }

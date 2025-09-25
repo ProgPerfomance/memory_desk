@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:memory_desk/core/theme/colors.dart';
 import 'package:memory_desk/presentation/auth/auth_view.dart';
 import 'package:memory_desk/presentation/profile/profile_view_model.dart';
-import 'package:provider/provider.dart'; // AppColors.background = #FAF5ED
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart'; // AppColors.background = #FAF5ED
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -76,21 +77,48 @@ class ProfileView extends StatelessWidget {
           _ActionRow(
             icon: Icons.delete_outline,
             label: 'Удалить аккаунт',
-            onTap: () {},
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    title: const Text("Запрос на удаление аккаунта"),
+                    content: const Text(
+                      "Ваш запрос на удаление аккаунта отправлен.\n"
+                      "Аккаунт будет удалён в течение 14 дней.",
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text("ОК"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             textColor: _danger,
           ),
+
           const _ThinDivider(),
           _ActionRow(
             icon: Icons.privacy_tip_outlined,
             label: 'Политика конфиденциальности',
-            onTap: () {},
+            onTap: () {
+              launchUrl(Uri.parse("https://thememo.mvpgarage.one/privacy"));
+            },
             textColor: _textPrimary,
           ),
           const _ThinDivider(),
           _ActionRow(
             icon: Icons.article_outlined,
-            label: 'Пользовательское соглашение',
-            onTap: () {},
+            label: 'Правила сервиса',
+            onTap: () {
+              launchUrl(Uri.parse("https://thememo.mvpgarage.one/guidelines"));
+            },
             textColor: _textPrimary,
           ),
 

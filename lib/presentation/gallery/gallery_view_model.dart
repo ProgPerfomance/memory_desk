@@ -36,4 +36,24 @@ class GalleryViewModel extends ChangeNotifier {
     error = null;
     await load(deskId);
   }
+
+  Future<void> updateImageRotation(String imageId, double rotation) async {
+    try {
+      await _deskRepository.updateImageRotation(imageId, rotation);
+
+      // локально обновляем
+      final index = deskPhotos.indexWhere((e) => e.id == imageId);
+      if (index != -1) {
+        deskPhotos[index] = deskPhotos[index].copyWith(rotation: rotation);
+      }
+
+      notifyListeners();
+    } catch (e, st) {
+      if (kDebugMode) {
+        print('updateImageRotation error: $e\n$st');
+      }
+      error = e.toString();
+      notifyListeners();
+    }
+  }
 }

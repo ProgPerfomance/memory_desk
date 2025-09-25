@@ -12,6 +12,7 @@ import 'package:memory_desk/presentation/invite_to_board/invite_to_board_view_mo
 import 'package:memory_desk/presentation/loading/loading_view.dart';
 import 'package:memory_desk/presentation/loading/loading_view_model.dart';
 import 'package:memory_desk/presentation/my_invites/my_invites_view_model.dart';
+import 'package:memory_desk/presentation/onboarding/onboarding_one_view.dart';
 import 'package:memory_desk/presentation/profile/profile_view.dart';
 import 'package:memory_desk/presentation/profile/profile_view_model.dart';
 import 'package:memory_desk/service_locator.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
         //  ChangeNotifierProvider(create: (context) => PhotoEditorViewModel()),
       ],
       child: MaterialApp(
-        home: LoadingView(),
+        home: OnboardingOneView(),
         debugShowCheckedModeBanner: false,
       ),
     );

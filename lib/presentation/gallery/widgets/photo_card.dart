@@ -31,7 +31,10 @@ class PhotoCard extends StatelessWidget {
       child: GestureDetector(
         onLongPress: () {
           showRotateOverlay(context, image, (newRotation) {
-            //  context.read<GalleryViewModel>().updateRotation(image, newRotation);
+            context.read<GalleryViewModel>().updateImageRotation(
+              image.id!,
+              newRotation,
+            );
           });
         },
         onTap: () {

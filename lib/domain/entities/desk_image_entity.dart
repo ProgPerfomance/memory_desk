@@ -22,3 +22,21 @@ class DeskImageEntity {
     );
   }
 }
+
+extension DeskImageEntityCopy on DeskImageEntity {
+  DeskImageEntity copyWith({
+    String? id,
+    String? imageUrl,
+    String? caption,
+    String? deskId,
+    double? rotation,
+  }) {
+    return DeskImageEntity(
+      id: id ?? this.id,
+      imageUrl: imageUrl ?? this.imageUrl,
+      caption: caption ?? this.caption,
+      deskId: deskId ?? this.deskId,
+      rotation: rotation ?? this.rotation,
+    );
+  }
+}
