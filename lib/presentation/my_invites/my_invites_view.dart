@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:memory_desk/domain/entities/invite_desk_entity.dart';
+import 'package:memory_desk/presentation/gallery/gallery_view.dart';
+import 'package:provider/provider.dart';
+
+import 'my_invites_view_model.dart';
 
 class MyInvitesView extends StatefulWidget {
   const MyInvitesView({super.key});
@@ -11,44 +16,20 @@ class _MyInvitesViewState extends State<MyInvitesView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final active = [
-    InviteData(
-      boardName: "Семейный альбом",
-      invitedBy: "@masha",
-      status: "active",
-      avatarUrl: "https://i.pravatar.cc/150?img=2",
-      date: "20.09.2025",
-    ),
-  ];
-
-  final accepted = [
-    InviteData(
-      boardName: "Поездка в Португалию",
-      invitedBy: "@petr",
-      status: "accepted",
-      avatarUrl: "https://i.pravatar.cc/150?img=3",
-      date: "15.09.2025",
-    ),
-  ];
-
-  final declined = [
-    InviteData(
-      boardName: "Рабочая доска",
-      invitedBy: "@katya",
-      status: "declined",
-      avatarUrl: "https://i.pravatar.cc/150?img=4",
-      date: "10.09.2025",
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
+    Future.microtask(() {
+      final vm = context.read<MyInvitesViewModel>();
+      vm.loadInvites();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<MyInvitesViewModel>(context);
     return Scaffold(
       backgroundColor: const Color(0xFFFAF5ED),
       appBar: AppBar(
@@ -78,15 +59,15 @@ class _MyInvitesViewState extends State<MyInvitesView>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildList(active, "Нет активных приглашений"),
-          _buildList(accepted, "Нет принятых приглашений"),
-          _buildList(declined, "Нет отклонённых приглашений"),
+          _buildList(vm.activeInvites, "Нет активных приглашений"),
+          _buildList(vm.acceptedInvites, "Нет принятых приглашений"),
+          _buildList(vm.declinedInvites, "Нет отклонённых приглашений"),
         ],
       ),
     );
   }
 
-  Widget _buildList(List<InviteData> items, String emptyText) {
+  Widget _buildList(List<InviteDeskEntity> items, String emptyText) {
     if (items.isEmpty) {
       return Center(
         child: Text(
@@ -108,24 +89,8 @@ class _MyInvitesViewState extends State<MyInvitesView>
   }
 }
 
-class InviteData {
-  final String boardName;
-  final String invitedBy;
-  final String status;
-  final String avatarUrl;
-  final String date;
-
-  InviteData({
-    required this.boardName,
-    required this.invitedBy,
-    required this.status,
-    required this.avatarUrl,
-    required this.date,
-  });
-}
-
 class _InviteCard extends StatelessWidget {
-  final InviteData invite;
+  final InviteDeskEntity invite;
   const _InviteCard({required this.invite});
 
   @override
@@ -134,11 +99,11 @@ class _InviteCard extends StatelessWidget {
     String badgeText;
 
     switch (invite.status) {
-      case "active":
+      case "pending":
         badgeColor = Colors.orange;
         badgeText = "Ожидает ответа";
         break;
-      case "accepted":
+      case "approved":
         badgeColor = Colors.green;
         badgeText = "Принято";
         break;
@@ -151,64 +116,121 @@ class _InviteCard extends StatelessWidget {
         badgeText = "";
     }
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(invite.avatarUrl),
-            radius: 28,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        if (invite.status == "approved") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      GalleryView(deskId: invite.deskId, desk: invite.desk!),
+            ),
+          );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Text(
-                  invite.boardName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                CircleAvatar(
+                  backgroundImage: NetworkImage(invite.user?.avatarUrl ?? ""),
+                  radius: 28,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        invite.desk?.name ?? "",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        "Пригласил: ${invite.user?.name ?? ""}",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  "Пригласил: ${invite.invitedBy}",
-                  style: const TextStyle(fontSize: 13, color: Colors.black54),
-                ),
-                Text(
-                  invite.date,
-                  style: const TextStyle(fontSize: 12, color: Colors.black38),
-                ),
+                if (invite.status != "pending")
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: badgeColor.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      badgeText,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: badgeColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
               ],
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: badgeColor.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              badgeText,
-              style: TextStyle(
-                fontSize: 12,
-                color: badgeColor,
-                fontWeight: FontWeight.w500,
+            if (invite.status == "pending") ...[
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  OutlinedButton(
+                    onPressed: () {
+                      context.read<MyInvitesViewModel>().declineInvite(
+                        invite.id,
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      side: const BorderSide(color: Colors.red),
+                    ),
+                    child: const Text("Отклонить"),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<MyInvitesViewModel>().acceptInvite(
+                        invite.id,
+                        invite.recipientId,
+                        invite.deskId,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text("Принять"),
+                  ),
+                ],
               ),
-            ),
-          ),
-        ],
+            ],
+          ],
+        ),
       ),
     );
   }

@@ -84,4 +84,15 @@ class RemoteService {
     final response = await dio.post("/users/search", data: {"query": query});
     return response;
   }
+
+  static Future<Response> updateImageRotation(
+    String imageId,
+    double rotation,
+  ) async {
+    final response = await dio.put(
+      "/desk/image/rotation/update",
+      data: {"imageId": imageId, "rotation": rotation},
+    );
+    return response;
+  }
 }
