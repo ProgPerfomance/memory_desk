@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_desk/core/theme/colors.dart';
 import 'package:memory_desk/domain/entities/invite_desk_entity.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view.dart';
 import 'package:provider/provider.dart';
@@ -31,12 +32,8 @@ class _MyInvitesViewState extends State<MyInvitesView>
   Widget build(BuildContext context) {
     final vm = Provider.of<MyInvitesViewModel>(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF5ED),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          "Мои приглашения",
-          style: TextStyle(color: Colors.black),
-        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -51,10 +48,7 @@ class _MyInvitesViewState extends State<MyInvitesView>
             Tab(text: "Отклонённые"),
           ],
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: SizedBox(),
       ),
       body: TabBarView(
         controller: _tabController,

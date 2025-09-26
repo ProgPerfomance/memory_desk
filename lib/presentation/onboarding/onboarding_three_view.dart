@@ -1,0 +1,106 @@
+import 'package:flutter/material.dart';
+import 'package:memory_desk/core/theme/text_styles.dart';
+import 'package:memory_desk/presentation/auth/auth_view.dart';
+
+class OnboardingThreeView extends StatelessWidget {
+  const OnboardingThreeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/onb_3.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              SizedBox(height: 24),
+              Container(
+                height: 48,
+                width: 248,
+                // decoration: BoxDecoration(
+                //   image: DecorationImage(
+                //     image: AssetImage("assets/images/logo_blur.png"),
+                //     fit: BoxFit.cover,
+                //     opacity: 0.5,
+                //   ),
+                // ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 24,
+                  ),
+                  child: Text("THE MEMORIES", style: AppTextStyles.h3),
+                ),
+              ),
+              Spacer(),
+              Container(
+                height: 300,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/onb_blur.png"),
+                    fit: BoxFit.cover,
+                    // opacity: 0.5,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14.0,
+                    vertical: 24,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Самые личные\nмоменты", style: AppTextStyles.h3),
+                      SizedBox(height: 8),
+                      Text(
+                        "Собери в одном месте то, что важно именно тебе.",
+                        style: AppTextStyles.body16,
+                      ),
+                      Spacer(),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AuthView(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 48,
+                            width: 118,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage("assets/images/blur_btn.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text("Далее", style: AppTextStyles.h4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

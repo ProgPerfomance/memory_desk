@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_desk/core/theme/text_styles.dart';
+import 'package:memory_desk/presentation/onboarding/onboarding_two_view.dart';
 
 class OnboardingOneView extends StatelessWidget {
   const OnboardingOneView({super.key});
@@ -41,7 +42,7 @@ class OnboardingOneView extends StatelessWidget {
               ),
               Spacer(),
               Container(
-                height: 350,
+                height: 300,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -59,7 +60,7 @@ class OnboardingOneView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Сохраняй моменты с друзьями",
+                        "Сохраняй моменты\nс друзьями",
                         style: AppTextStyles.h3,
                       ),
                       SizedBox(height: 8),
@@ -70,16 +71,28 @@ class OnboardingOneView extends StatelessWidget {
                       Spacer(),
                       Align(
                         alignment: Alignment.topRight,
-                        child: Container(
-                          height: 48,
-                          width: 118,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/images/blur_btn.png"),
-                              fit: BoxFit.cover,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OnboardingTwoView(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 48,
+                            width: 118,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage("assets/images/blur_btn.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text("Далее", style: AppTextStyles.h4),
                             ),
                           ),
-                          child: Center(child: Text("Далее")),
                         ),
                       ),
                       SizedBox(height: 24),

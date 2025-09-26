@@ -44,30 +44,30 @@ class _BoardsListScreen extends StatelessWidget {
               child: Column(
                 children: [
                   if (vm.isLoading) const LinearProgressIndicator(minHeight: 2),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 14),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfileView(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          height: 42,
-                          width: 42,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(right: 14),
+                  //     child: GestureDetector(
+                  //       onTap: () {
+                  //         Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => ProfileView(),
+                  //           ),
+                  //         );
+                  //       },
+                  //       child: Container(
+                  //         height: 42,
+                  //         width: 42,
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(100),
+                  //           color: Colors.grey,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 16),
                   Expanded(
                     child: RefreshIndicator(
@@ -91,36 +91,36 @@ class _BoardsListScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ActionButton(
-                    icon: Icons.add,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Step1View()),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 12),
-                  ActionButton(
-                    icon: Icons.people,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyInvitesView(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+            // Positioned(
+            //   bottom: 20,
+            //   right: 20,
+            //   child: Column(
+            //     mainAxisSize: MainAxisSize.min,
+            //     children: [
+            //       ActionButton(
+            //         icon: Icons.add,
+            //         onTap: () {
+            //           Navigator.push(
+            //             context,
+            //             MaterialPageRoute(builder: (context) => Step1View()),
+            //           );
+            //         },
+            //       ),
+            //       SizedBox(height: 12),
+            //       // ActionButton(
+            //       //   icon: Icons.people,
+            //       //   onTap: () {
+            //       //     Navigator.push(
+            //       //       context,
+            //       //       MaterialPageRoute(
+            //       //         builder: (context) => MyInvitesView(),
+            //       //       ),
+            //       //     );
+            //       //   },
+            //       // ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

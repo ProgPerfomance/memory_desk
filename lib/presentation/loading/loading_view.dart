@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:memory_desk/presentation/navigation/main_navigation_view.dart';
+import 'package:memory_desk/presentation/onboarding/onboarding_one_view.dart';
 import 'package:provider/provider.dart';
 import '../auth/auth_view.dart';
 import '../desk_list/desk_list_view.dart';
@@ -21,9 +23,9 @@ class LoadingView extends StatelessWidget {
         }
 
         if (snapshot.hasData && snapshot.data == true) {
-          return const BoardsListView();
+          return const MainScreen();
         } else {
-          return const AuthView();
+          return const OnboardingOneView();
         }
       },
     );

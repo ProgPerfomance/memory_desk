@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_desk/presentation/auth/auth_view_model.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
+import 'package:memory_desk/presentation/navigation/main_navigation_view.dart';
 import 'package:provider/provider.dart';
 
 final TextEditingController _emailController = TextEditingController();
@@ -105,7 +106,7 @@ class AuthView extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => BoardsListView(),
+                              builder: (context) => MainScreen(),
                             ),
                           );
                           //  if (!context.mounted) return;

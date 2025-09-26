@@ -8,6 +8,12 @@ class AppTextStyles {
     color: Colors.white,
   );
 
+  static TextStyle h4 = GoogleFonts.montserrat(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  );
+
   static TextStyle body16 = GoogleFonts.montserrat(
     fontSize: 16,
     fontWeight: FontWeight.w400,
