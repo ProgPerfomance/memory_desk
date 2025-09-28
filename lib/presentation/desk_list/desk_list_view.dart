@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_desk/core/ad_manager.dart';
 import 'package:memory_desk/core/theme/colors.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
 import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
@@ -6,6 +7,7 @@ import 'package:memory_desk/presentation/gallery/gallery_view.dart';
 import 'package:memory_desk/presentation/my_invites/my_invites_view.dart';
 import 'package:memory_desk/presentation/profile/profile_view.dart';
 import 'package:provider/provider.dart';
+import 'package:yandex_mobileads/mobile_ads.dart';
 import '../gallery/widgets/action_button.dart';
 import 'desk_list_view_model.dart';
 
@@ -80,17 +82,30 @@ class _BoardsListScreen extends StatelessWidget {
                         physics:
                             const AlwaysScrollableScrollPhysics(), // важно для RefreshIndicator
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                        itemCount: boards.length,
+                        itemCount: boards.length + 1,
                         separatorBuilder: (_, __) => const SizedBox(height: 16),
-                        itemBuilder:
-                            (context, index) =>
-                                _BoardCard(board: boards[index]),
+                        itemBuilder: (context, index) {
+                          if (index != boards.length) {
+                            return _BoardCard(board: boards[index]);
+                          } else {
+                            return SizedBox(
+                              //    height: 140,
+                              child: AdWidget(
+                                bannerAd: stickyAd(
+                                  (MediaQuery.of(context).size.width - 32)
+                                      .toInt(),
+                                ),
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+
             // Positioned(
             //   bottom: 20,
             //   right: 20,
@@ -120,6 +135,9 @@ class _BoardsListScreen extends StatelessWidget {
             //       // ),
             //     ],
             //   ),
+            // ),
+            // Positioned(
+            //   bottom: 0,
             // ),
           ],
         ),

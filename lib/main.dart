@@ -13,12 +13,14 @@ import 'package:memory_desk/presentation/loading/loading_view.dart';
 import 'package:memory_desk/presentation/loading/loading_view_model.dart';
 import 'package:memory_desk/presentation/my_invites/my_invites_view_model.dart';
 import 'package:memory_desk/presentation/navigation/main_navigation_view.dart';
+import 'package:memory_desk/presentation/navigation/main_navigation_view_model.dart';
 import 'package:memory_desk/presentation/onboarding/onboarding_one_view.dart';
 import 'package:memory_desk/presentation/profile/profile_view.dart';
 import 'package:memory_desk/presentation/profile/profile_view_model.dart';
 import 'package:memory_desk/service_locator.dart';
 import 'package:provider/provider.dart';
 
+import 'core/ad_manager.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -26,6 +28,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   register();
+  await AdManager().init();
   runApp(MyApp());
 }
 
@@ -45,6 +48,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
         ChangeNotifierProvider(create: (context) => InviteToBoardViewModel()),
         ChangeNotifierProvider(create: (context) => MyInvitesViewModel()),
+        ChangeNotifierProvider(create: (context) => MainNavigationViewModel()),
         //  ChangeNotifierProvider(create: (context) => PhotoEditorViewModel()),
       ],
       child: MaterialApp(

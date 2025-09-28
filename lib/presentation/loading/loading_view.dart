@@ -23,7 +23,7 @@ class LoadingView extends StatelessWidget {
         }
 
         if (snapshot.hasData && snapshot.data == true) {
-          return const MainScreen();
+          return const MainNavigationView();
         } else {
           return const OnboardingOneView();
         }

@@ -106,7 +106,7 @@ class AuthView extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MainScreen(),
+                              builder: (context) => MainNavigationView(),
                             ),
                           );
                           //  if (!context.mounted) return;
