@@ -85,6 +85,11 @@ class RemoteService {
     return response;
   }
 
+  static Future<Response> getDeskById(String id) async {
+    final response = await dio.get("/desk/byId/$id");
+    return response;
+  }
+
   static Future<Response> updateImageRotation(
     String imageId,
     double rotation,

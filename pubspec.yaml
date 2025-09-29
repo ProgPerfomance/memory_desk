@@ -27,6 +27,7 @@ dependencies:
   crop_your_image:
   url_launcher:
   yandex_mobileads: any
+  app_links:
 
 dev_dependencies:
   flutter_test:

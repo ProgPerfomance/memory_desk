@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:memory_desk/data/repository/user_repository.dart';
 import 'package:memory_desk/data/services/remote_service.dart';
 import 'package:memory_desk/data/services/user_id_service.dart';
@@ -6,22 +6,25 @@ import 'package:memory_desk/domain/entities/user_entity.dart';
 import 'package:memory_desk/service_locator.dart';
 
 class LoadingViewModel extends ChangeNotifier {
-  UserRepository _userRepository = getIt.get<UserRepository>();
+  final UserRepository _userRepository = getIt.get<UserRepository>();
 
-  Future<bool> loadUser() async {
+  Future<String> loadInitialRoute() async {
+    // 1. Ловим диплинк при старте
+
+    // 2. Проверяем юзера
     String? userId = await UserIdService.getUserId();
-
     if (userId == null) {
-      return false;
+      return '/auth';
     }
-    final response = await RemoteService.getUserById(userId);
 
+    final response = await RemoteService.getUserById(userId);
     final user = response.data;
 
-    if (user == null) {
-      return false;
-    }
+    return '/auth';
+
+    // Обновляем локальные данные
     _userRepository.updateLocalUserData(UserEntity.fromApi(user));
-    return true;
+
+    // 3. Если есть диплинк — возвращаем его, иначе дефолт
   }
 }

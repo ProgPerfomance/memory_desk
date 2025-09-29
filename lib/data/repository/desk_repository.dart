@@ -48,4 +48,12 @@ class DeskRepository {
   Future<void> updateImageRotation(String imageId, double rotation) async {
     final response = await RemoteService.updateImageRotation(imageId, rotation);
   }
+
+  Future<DeskEntity> getDeskById(String id) async {
+
+    final response = await RemoteService.getDeskById(id);
+    return DeskEntity.fromApi(response.data);
+
+  }
+
 }

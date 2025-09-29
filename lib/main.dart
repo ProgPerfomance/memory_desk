@@ -4,6 +4,7 @@ import 'package:memory_desk/presentation/add_images/add_image_view_model.dart';
 import 'package:memory_desk/presentation/auth/auth_view.dart';
 import 'package:memory_desk/presentation/auth/auth_view_model.dart';
 import 'package:memory_desk/presentation/create_desk/create_desk_view_model.dart';
+import 'package:memory_desk/presentation/deep_link_listener.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view.dart';
 import 'package:memory_desk/presentation/desk_list/desk_list_view_model.dart';
 import 'package:memory_desk/presentation/edit_image/edit_image_view_model.dart';
@@ -29,7 +30,7 @@ void main() async {
 
   register();
   await AdManager().init();
-  runApp(MyApp());
+  runApp(DeepLinkListener(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -54,8 +55,11 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         home: LoadingView(),
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
       ),
     );
   }
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
