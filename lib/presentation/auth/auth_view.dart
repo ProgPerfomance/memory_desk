@@ -61,7 +61,9 @@ class AuthView extends StatelessWidget {
                   if (success == true) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => BoardsListView()),
+                      MaterialPageRoute(
+                        builder: (context) => MainNavigationView(),
+                      ),
                     );
                   }
                 },

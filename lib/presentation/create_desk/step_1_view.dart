@@ -78,66 +78,68 @@ class Step1View extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           physics: const BouncingScrollPhysics(),
                           padding: EdgeInsets.zero, // справа в край
-                          itemCount: 1 + vm.backgrounds.length, // CTA + пресеты
+                          //   itemCount: 1 + vm.backgrounds.length, // CTA + пресеты
+                          itemCount: vm.backgrounds.length, // CTA + пресеты
                           separatorBuilder:
                               (_, __) => const SizedBox(width: 12),
                           itemBuilder: (context, i) {
                             // 0 — CTA «загрузить своё»
-                            if (i == 0) {
-                              final thumb = vm.userThumb;
-                              return GestureDetector(
-                                onTap: vm.pickUserImage,
-                                child: AspectRatio(
-                                  aspectRatio: 9 / 16,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Stack(
-                                      fit: StackFit.expand,
-                                      children: [
-                                        // Фон — либо прозрачный, либо загруженное фото
-                                        if (thumb == null)
-                                          Container(
-                                            color: Colors.white.withOpacity(
-                                              0.2,
-                                            ),
-                                          )
-                                        else
-                                          Image(
-                                            image: thumb,
-                                            fit: BoxFit.cover,
-                                          ),
-
-                                        // Если пользовательское фото — добавляем overlay и иконку
-                                        if (thumb != null) ...[
-                                          Container(
-                                            color: Colors.white.withOpacity(
-                                              0.5,
-                                            ),
-                                          ),
-                                          const Center(
-                                            child: Icon(
-                                              Icons.edit,
-                                              size: 32,
-                                              color: Colors.black87,
-                                            ),
-                                          ),
-                                        ] else
-                                          const Center(
-                                            child: Icon(
-                                              Icons.add,
-                                              size: 40,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
+                            // if (i == 0) {
+                            //   final thumb = vm.userThumb;
+                            //   return GestureDetector(
+                            //     onTap: vm.pickUserImage,
+                            //     child: AspectRatio(
+                            //       aspectRatio: 9 / 16,
+                            //       child: ClipRRect(
+                            //         borderRadius: BorderRadius.circular(12),
+                            //         child: Stack(
+                            //           fit: StackFit.expand,
+                            //           children: [
+                            //             // Фон — либо прозрачный, либо загруженное фото
+                            //             if (thumb == null)
+                            //               Container(
+                            //                 color: Colors.white.withOpacity(
+                            //                   0.2,
+                            //                 ),
+                            //               )
+                            //             else
+                            //               Image(
+                            //                 image: thumb,
+                            //                 fit: BoxFit.cover,
+                            //               ),
+                            //
+                            //             // Если пользовательское фото — добавляем overlay и иконку
+                            //             if (thumb != null) ...[
+                            //               Container(
+                            //                 color: Colors.white.withOpacity(
+                            //                   0.5,
+                            //                 ),
+                            //               ),
+                            //               const Center(
+                            //                 child: Icon(
+                            //                   Icons.edit,
+                            //                   size: 32,
+                            //                   color: Colors.black87,
+                            //                 ),
+                            //               ),
+                            //             ] else
+                            //               const Center(
+                            //                 child: Icon(
+                            //                   Icons.add,
+                            //                   size: 40,
+                            //                   color: Colors.white,
+                            //                 ),
+                            //               ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   );
+                            // }
 
                             // Пресеты
-                            final url = vm.backgrounds[i - 1];
+                            //    final url = vm.backgrounds[i - 1];
+                            final url = vm.backgrounds[i];
                             final isSelected =
                                 vm.selectedImageUrl == url &&
                                 vm.userImage == null;

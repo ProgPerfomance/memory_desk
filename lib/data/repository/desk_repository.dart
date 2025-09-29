@@ -13,7 +13,7 @@ class DeskRepository {
     final response = await RemoteService.getUserDesks(userId);
     List data = response.data;
 
-    return data.map((v) => DeskEntity.fromApi(v)).toList();
+    return data.map((v) => DeskEntity.fromApi(v)).toList().reversed.toList();
   }
 
   Future<void> uploadImagesToDesk(
@@ -38,7 +38,11 @@ class DeskRepository {
   Future<List<DeskImageEntity>> getDeskImages(String deskId) async {
     final response = await RemoteService.loadImagesOnDesk(deskId);
     List data = response.data;
-    return data.map((v) => DeskImageEntity.fromApi(v)).toList();
+    return data
+        .map((v) => DeskImageEntity.fromApi(v))
+        .toList()
+        .reversed
+        .toList();
   }
 
   Future<void> updateImageRotation(String imageId, double rotation) async {

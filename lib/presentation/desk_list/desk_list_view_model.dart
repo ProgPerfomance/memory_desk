@@ -12,6 +12,7 @@ class DeskListViewModel extends ChangeNotifier {
   List<DeskEntity> desks = [];
 
   bool isLoading = false;
+  bool isLoaded = false; // 🔥 новое поле
   String? error;
 
   Future<void> loadMyDesks() async {
@@ -21,6 +22,7 @@ class DeskListViewModel extends ChangeNotifier {
       notifyListeners();
 
       desks = await _deskRepository.getMyDesks(_userRepository.user.id);
+      isLoaded = true; // 🔥 отмечаем, что хотя бы одна загрузка состоялась
     } catch (e, st) {
       error = e.toString();
       if (kDebugMode) {

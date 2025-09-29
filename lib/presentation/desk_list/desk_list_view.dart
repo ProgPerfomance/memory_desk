@@ -2,38 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:memory_desk/core/ad_manager.dart';
 import 'package:memory_desk/core/theme/colors.dart';
 import 'package:memory_desk/domain/entities/desk_entity.dart';
-import 'package:memory_desk/presentation/create_desk/step_1_view.dart';
 import 'package:memory_desk/presentation/gallery/gallery_view.dart';
-import 'package:memory_desk/presentation/my_invites/my_invites_view.dart';
-import 'package:memory_desk/presentation/profile/profile_view.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
-import '../gallery/widgets/action_button.dart';
 import 'desk_list_view_model.dart';
 
-class BoardsListView extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:memory_desk/core/ad_manager.dart';
+import 'package:memory_desk/core/theme/colors.dart';
+import 'package:memory_desk/domain/entities/desk_entity.dart';
+import 'package:memory_desk/presentation/gallery/gallery_view.dart';
+import 'package:provider/provider.dart';
+import 'package:yandex_mobileads/mobile_ads.dart';
+import 'desk_list_view_model.dart';
+
+class BoardsListView extends StatefulWidget {
   const BoardsListView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => DeskListViewModel()..loadMyDesks(),
-      child: const _BoardsListScreen(),
-    );
-  }
+  State<BoardsListView> createState() => _BoardsListViewState();
 }
 
-class _BoardsListScreen extends StatelessWidget {
-  const _BoardsListScreen();
+class _BoardsListViewState extends State<BoardsListView> {
+  @override
+  void initState() {
+    super.initState();
+    // грузим данные один раз при входе
+    Future.microtask(() {
+      final vm = context.read<DeskListViewModel>();
+      if (!vm.isLoaded && !vm.isLoading) {
+        vm.loadMyDesks();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<DeskListViewModel>();
-
-    final boards = List.generate(vm.desks.length, (i) {
-      final item = vm.desks[i];
-      return item;
-    });
+    final boards = vm.desks;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -46,41 +52,15 @@ class _BoardsListScreen extends StatelessWidget {
               child: Column(
                 children: [
                   if (vm.isLoading) const LinearProgressIndicator(minHeight: 2),
-                  // Align(
-                  //   alignment: Alignment.centerRight,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(right: 14),
-                  //     child: GestureDetector(
-                  //       onTap: () {
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) => ProfileView(),
-                  //           ),
-                  //         );
-                  //       },
-                  //       child: Container(
-                  //         height: 42,
-                  //         width: 42,
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.circular(100),
-                  //           color: Colors.grey,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   const SizedBox(height: 16),
                   Expanded(
                     child: RefreshIndicator(
                       color: Colors.black,
                       onRefresh: () async {
-                        // при свайпе вниз обновляем список досок
                         await context.read<DeskListViewModel>().loadMyDesks();
                       },
                       child: ListView.separated(
-                        physics:
-                            const AlwaysScrollableScrollPhysics(), // важно для RefreshIndicator
+                        physics: const AlwaysScrollableScrollPhysics(),
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                         itemCount: boards.length + 1,
                         separatorBuilder: (_, __) => const SizedBox(height: 16),
@@ -89,7 +69,7 @@ class _BoardsListScreen extends StatelessWidget {
                             return _BoardCard(board: boards[index]);
                           } else {
                             return SizedBox(
-                              //    height: 140,
+                              height: 140,
                               child: AdWidget(
                                 bannerAd: stickyAd(
                                   (MediaQuery.of(context).size.width - 32)
@@ -105,139 +85,7 @@ class _BoardsListScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Positioned(
-            //   bottom: 20,
-            //   right: 20,
-            //   child: Column(
-            //     mainAxisSize: MainAxisSize.min,
-            //     children: [
-            //       ActionButton(
-            //         icon: Icons.add,
-            //         onTap: () {
-            //           Navigator.push(
-            //             context,
-            //             MaterialPageRoute(builder: (context) => Step1View()),
-            //           );
-            //         },
-            //       ),
-            //       SizedBox(height: 12),
-            //       // ActionButton(
-            //       //   icon: Icons.people,
-            //       //   onTap: () {
-            //       //     Navigator.push(
-            //       //       context,
-            //       //       MaterialPageRoute(
-            //       //         builder: (context) => MyInvitesView(),
-            //       //       ),
-            //       //     );
-            //       //   },
-            //       // ),
-            //     ],
-            //   ),
-            // ),
-            // Positioned(
-            //   bottom: 0,
-            // ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            'Доски воспоминаний',
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
-          ),
-          SizedBox(height: 6),
-          Text(
-            'Просматривайте, показывайте и делитесь теплыми моментами. ',
-            style: TextStyle(fontSize: 14, color: Colors.black54, height: 1.3),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Псевдо-переключатель "Мои / Все" в духе Step2PrivacyView.
-/// Чисто UI: активное состояние – «Мои».
-class _MyAllSegmented extends StatelessWidget {
-  const _MyAllSegmented();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black12),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        padding: const EdgeInsets.all(6),
-        child: Row(
-          children: [
-            _SegmentButton(label: 'Мои', selected: true),
-            const SizedBox(width: 6),
-            _SegmentButton(label: 'Друзья', selected: false),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SegmentButton extends StatelessWidget {
-  final String label;
-  final bool selected;
-  const _SegmentButton({required this.label, required this.selected});
-
-  @override
-  Widget build(BuildContext context) {
-    final bg = selected ? Colors.black : Colors.transparent;
-    final fg = selected ? Colors.white : Colors.black87;
-    final border = selected ? Colors.black : Colors.transparent;
-
-    return Expanded(
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 160),
-        curve: Curves.easeOut,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: border),
-          boxShadow:
-              selected
-                  ? const [
-                    BoxShadow(
-                      color: Color(0x33000000),
-                      blurRadius: 12,
-                      offset: Offset(0, 6),
-                    ),
-                  ]
-                  : null,
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            color: fg,
-            fontWeight: FontWeight.w800,
-            fontSize: 14,
-          ),
         ),
       ),
     );
@@ -274,9 +122,7 @@ class _BoardCard extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                // Фон-картинка
                 Positioned.fill(child: _BoardImage(url: board.backgroundUrl)),
-                // Мягкий градиент для читаемости
                 Positioned.fill(
                   child: DecoratedBox(
                     decoration: BoxDecoration(
@@ -293,19 +139,11 @@ class _BoardCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Бейдж приватности (левый верх)
                 Positioned(
                   top: 12,
                   left: 12,
                   child: _PrivacyChip(privacy: board.privacy),
                 ),
-                // Кнопка меню (правый верх, визуально в стиле рефа)
-                // const Positioned(
-                //   top: 6,
-                //   right: 6,
-                //   child: _RoundIcon(icon: Icons.more_vert),
-                // ),
-                // Низ: заголовок, описание, счётчик фото
                 Positioned(
                   left: 16,
                   right: 16,

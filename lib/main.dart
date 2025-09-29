@@ -49,6 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => InviteToBoardViewModel()),
         ChangeNotifierProvider(create: (context) => MyInvitesViewModel()),
         ChangeNotifierProvider(create: (context) => MainNavigationViewModel()),
+        ChangeNotifierProvider(create: (context) => DeskListViewModel()),
         //  ChangeNotifierProvider(create: (context) => PhotoEditorViewModel()),
       ],
       child: MaterialApp(

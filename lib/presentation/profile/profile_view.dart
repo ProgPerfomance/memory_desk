@@ -16,115 +16,104 @@ class ProfileView extends StatelessWidget {
     final vm = Provider.of<ProfileViewModel>(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: _textPrimary),
-          onPressed: () => Navigator.of(context).maybePop(),
-          tooltip: 'Назад',
-        ),
-        centerTitle: true,
-        title: const Text(
-          'Профиль',
-          style: TextStyle(color: _textPrimary, fontWeight: FontWeight.w600),
-        ),
-      ),
-      body: Column(
-        children: [
-          // Шапка профиля
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-            child: Row(
-              children: [
-                Center(
-                  child: _Avatar(
-                    avatarUrl: null,
-                    fallbackText: _initials(vm.user.name, vm.user.email),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Шапка профиля
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              child: Row(
+                children: [
+                  Center(
+                    child: _Avatar(
+                      avatarUrl: null,
+                      fallbackText: _initials(vm.user.name, vm.user.email),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _HeaderBlock(
-                    name: vm.user.name,
-                    email: vm.user.email,
-                    textPrimary: _textPrimary,
-                    textSecondary: _textSecondary,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _HeaderBlock(
+                      name: vm.user.name,
+                      email: vm.user.email,
+                      textPrimary: _textPrimary,
+                      textSecondary: _textSecondary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          const Spacer(),
+            const Spacer(),
 
-          // Нижние действия (плоские строки с разделителями)
-          _ActionRow(
-            icon: Icons.exit_to_app,
-            label: 'Выйти',
-            onTap: () async {
-              await vm.logout();
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => AuthView()),
-                (v) => false,
-              );
-            },
-            textColor: _textPrimary,
-          ),
-          const _ThinDivider(),
-          _ActionRow(
-            icon: Icons.delete_outline,
-            label: 'Удалить аккаунт',
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    title: const Text("Запрос на удаление аккаунта"),
-                    content: const Text(
-                      "Ваш запрос на удаление аккаунта отправлен.\n"
-                      "Аккаунт будет удалён в течение 14 дней.",
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text("ОК"),
+            // Нижние действия (плоские строки с разделителями)
+            _ActionRow(
+              icon: Icons.exit_to_app,
+              label: 'Выйти',
+              onTap: () async {
+                await vm.logout();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => AuthView()),
+                  (v) => false,
+                );
+              },
+              textColor: _textPrimary,
+            ),
+            const _ThinDivider(),
+            _ActionRow(
+              icon: Icons.delete_outline,
+              label: 'Удалить аккаунт',
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ],
-                  );
-                },
-              );
-            },
-            textColor: _danger,
-          ),
+                      title: const Text("Запрос на удаление аккаунта"),
+                      content: const Text(
+                        "Ваш запрос на удаление аккаунта отправлен.\n"
+                        "Аккаунт будет удалён в течение 14 дней.",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("ОК"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              textColor: _danger,
+            ),
 
-          const _ThinDivider(),
-          _ActionRow(
-            icon: Icons.privacy_tip_outlined,
-            label: 'Политика конфиденциальности',
-            onTap: () {
-              launchUrl(Uri.parse("https://thememo.mvpgarage.one/privacy"));
-            },
-            textColor: _textPrimary,
-          ),
-          const _ThinDivider(),
-          _ActionRow(
-            icon: Icons.article_outlined,
-            label: 'Правила сервиса',
-            onTap: () {
-              launchUrl(Uri.parse("https://thememo.mvpgarage.one/guidelines"));
-            },
-            textColor: _textPrimary,
-          ),
+            const _ThinDivider(),
+            _ActionRow(
+              icon: Icons.privacy_tip_outlined,
+              label: 'Политика конфиденциальности',
+              onTap: () {
+                launchUrl(Uri.parse("https://thememo.mvpgarage.one/privacy"));
+              },
+              textColor: _textPrimary,
+            ),
+            const _ThinDivider(),
+            _ActionRow(
+              icon: Icons.article_outlined,
+              label: 'Правила сервиса',
+              onTap: () {
+                launchUrl(
+                  Uri.parse("https://thememo.mvpgarage.one/guidelines"),
+                );
+              },
+              textColor: _textPrimary,
+            ),
 
-          // Отступ под нижний инсет
-          const SafeArea(top: false, child: SizedBox(height: 8)),
-        ],
+            // Отступ под нижний инсет
+            const SafeArea(top: false, child: SizedBox(height: 8)),
+          ],
+        ),
       ),
     );
   }

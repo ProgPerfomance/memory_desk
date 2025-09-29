@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:memory_desk/presentation/create_desk/create_desk_view_model.dart';
+import 'package:memory_desk/presentation/desk_list/desk_list_view_model.dart';
 import 'package:provider/provider.dart';
 
 class Step2PrivacyView extends StatelessWidget {
@@ -14,6 +17,7 @@ class Step2PrivacyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<CreateDeskViewModel>(context);
+    final desksListVm = Provider.of<DeskListViewModel>(context);
     return Scaffold(
       backgroundColor: const Color(0xFFFAF5ED),
       body: SafeArea(
@@ -91,10 +95,13 @@ class Step2PrivacyView extends StatelessWidget {
                     elevation: 6,
                     child: InkWell(
                       customBorder: const CircleBorder(),
-                      onTap: () async {
-                        await vm.createDesk(name, description);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
+                      onTap: () {
+                        Throttle.run(() async {
+                          await vm.createDesk(name, description);
+                          await desksListVm.loadMyDesks();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        });
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(18.0),
@@ -115,8 +122,6 @@ class Step2PrivacyView extends StatelessWidget {
     );
   }
 }
-
-enum _PrivacyType { private, link, public }
 
 class _PrivacyCard extends StatelessWidget {
   final PrivacyTypes type;
@@ -210,5 +215,18 @@ class _PrivacyCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class Throttle {
+  static Timer? _timer;
+
+  static void run(
+    VoidCallback action, {
+    Duration duration = const Duration(seconds: 1),
+  }) {
+    if (_timer?.isActive ?? false) return;
+    action();
+    _timer = Timer(duration, () {});
   }
 }
